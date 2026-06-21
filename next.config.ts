@@ -1,7 +1,6 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  // Matikan eslint dan typescript check di sini
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // Matikan semuanya
   eslint: {
     ignoreDuringBuilds: true,
   },

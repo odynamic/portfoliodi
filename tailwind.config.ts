@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: "class", // Mengaktifkan fitur dark mode berbasis kelas HTML
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -8,12 +9,22 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-inter)", "sans-serif"],
+        heading: ["var(--font-plus-jakarta)", "sans-serif"],
+      },
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        brand: {
+          bg: "#FAFAFA",
+          dark: "#0A0F1D",
+          muted: "#52525B",
+          blue: "#0066FF",
+          accent: "#E2E8F0",
+        },
       },
     },
   },
   plugins: [],
 };
+
 export default config;

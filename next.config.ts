@@ -1,13 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    // Ini akan menonaktifkan ESLint selama proses build di Vercel
-    ignoreDuringBuilds: true,
-  },
   typescript: {
-    // Ini juga akan menonaktifkan pemeriksaan tipe TypeScript yang ketat
+    // Membantu proses build agar tidak gagal karena error kecil TypeScript
     ignoreBuildErrors: true,
   },
+  // Anda tidak perlu menuliskan 'eslint' di sini karena sudah tidak didukung
 };
 
 export default nextConfig;

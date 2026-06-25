@@ -130,8 +130,7 @@ export default function ExperienceSection() {
         </div>
         
         <div className="flex justify-center -mt-2 mb-3">
-          <div className="relative flex p-1 bg-white dark:bg-slate-900/60 backdrop-blur-xl rounded-xl border border-slate-200/60 dark:border-slate-800/60 shadow-sm group">
-            {[
+          <div className="relative flex p-1 bg-white dark:bg-slate-900/60 md:backdrop-blur-xl rounded-xl border border-slate-200/60 dark:border-slate-800/60 shadow-sm group">            {[
               { id: "All", label: "All", icon: <Layers size={11} /> },
               { id: "Industry", label: "Industry", icon: <Briefcase size={11} /> },
               { id: "Community", label: "Community", icon: <Users size={11} /> }

@@ -175,8 +175,7 @@ export default function About({ projects = [] }: AboutProps) {
                 variants={buttonVariants}
                 whileHover="hover"
                 whileTap="tap"
-                className="flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white px-6 py-3.5 rounded-xl font-bold text-[11px] uppercase tracking-wider backdrop-blur-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
-              >
+                className="flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white px-6 py-3.5 rounded-xl font-bold text-[11px] uppercase tracking-wider transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"              >
                 View Projects <ArrowRight size={13} />
               </motion.a>
             </div>

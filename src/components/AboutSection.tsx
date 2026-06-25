@@ -159,8 +159,9 @@ export default function About({ projects = [] }: AboutProps) {
             
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <motion.a 
-                href="/cv-dyah.pdf" 
-                download
+                href="https://drive.google.com/file/d/1hC67zOxAIbAgidDYOYCfrSQCI9QP52ua/view?usp=sharing" 
+                target="_blank" 
+                rel="noopener noreferrer"
                 variants={buttonVariants}
                 whileHover="hover"
                 whileTap="tap"

@@ -1,10 +1,32 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { FaInstagram, FaLinkedin, FaGithub, FaMapMarkerAlt, FaEnvelope } from "react-icons/fa";
 import { FiArrowUpRight as ArrowIcon } from "react-icons/fi";
 import { IoSend } from "react-icons/io5";
+
+// Variant untuk container agar anak-anaknya muncul bertahap dengan lebih halus dan lembut
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.15,
+    },
+  },
+};
+
+// Variant elemen dengan pergerakan yang lebih lambat dan "soft"
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }, // Menggunakan ease-out kustom yang sangat halus
+  },
+};
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -43,72 +65,100 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="relative w-full pt-8 pb-8 bg-[#F4F4F5] dark:bg-[#070C19] overflow-hidden transition-colors duration-500 border-t border-gray-200/30 dark:border-gray-900/40 scroll-mt-24">
+    <section id="contact" className="relative w-full pt-10 pb-10 md:pt-14 md:pb-14 bg-slate-100/90 dark:bg-slate-950 transition-colors duration-500 overflow-hidden font-sans selection:bg-slate-200 scroll-mt-24">
+      {/* BACKGROUND GRID */}
       <div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] pointer-events-none rounded-full"
+        className="absolute inset-0 pointer-events-none opacity-70 dark:opacity-30"
         style={{
-          background: "radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, rgba(37, 99, 235, 0) 70%)"
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='28' height='28' viewBox='0 0 28 28' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h28v28H0z' fill='none'/%3E%3Cpath d='M28 0v28H0' fill='none' stroke='%2394a3b8' stroke-width='1.2'/%3E%3C/svg%3E")`,
+          backgroundSize: '28px 28px'
         }}
       />
 
+      {/* Main Container dengan Motion Viewport Stagger yang Lebih Smooth */}
       <motion.div 
-        animate={{ backgroundPosition: ["0px 0px", "-40px 40px"] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-0 bg-[linear-gradient(to_right,#8080801a_1px,transparent_1px),linear-gradient(to_bottom,#8080801a_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none [mask-image:radial-gradient(ellipse_80%_70%_at_50%_50%,#000_60%,transparent_100%)]" 
-      />
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-80px" }}
+        className="mx-auto max-w-4xl px-6 sm:px-8 relative z-10"
+      >
+        
+        {/* HEADER SECTION */}
+        <div className="flex flex-col items-center mt-0 mb-12 text-center">
+          <motion.h2 
+            variants={itemVariants}
+            className="text-2xl sm:text-3xl font-black tracking-[-0.03em] text-slate-950 dark:text-white mb-2"
+          >
+            Start a Conversation
+          </motion.h2>
 
-      <div className="mx-auto max-w-4xl px-8 relative z-10">
-        <div className="text-center mb-4 space-y-2 -mt-4">
-          <div className="inline-block px-4 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/5 backdrop-blur-md">
-            <p className="text-blue-600 dark:text-blue-400 font-black tracking-[0.3em] text-[8px] uppercase">Contact Me</p>
-          </div>
-          <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter">Let's Start a Conversation</h2>
-          <div className="flex justify-center pt-1">
-            <motion.div initial={{ width: 0 }} whileInView={{ width: "60px" }} viewport={{ once: true }} className="h-1 bg-blue-600 rounded-full mt-1 mb-2 shadow-[0_0_8px_rgba(37,99,235,0.5)]" />
+          <div className="flex justify-center">
+            <motion.div
+              initial={{ width: 0, opacity: 0 }}
+              whileInView={{ width: 36, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+              className="h-1 bg-slate-950 dark:bg-white rounded-full"
+            />
           </div>
         </div>
 
-        <div className="grid md:grid-cols-12 gap-8 items-stretch">
-          <div className="md:col-span-5 flex flex-col">
-            <h4 className="text-[8px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 px-1 mb-3">Connect Platforms</h4>
+        <div className="grid md:grid-cols-12 gap-4 items-stretch">
+          
+          {/* KOLOM KIRI: Connect Platforms & Location (Icon Ke Bawah) */}
+          <motion.div variants={itemVariants} className="md:col-span-5 flex flex-col">
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 px-1 mb-2.5">Connect Platforms</h4>
             
-            <div className="flex-1 flex flex-col justify-between space-y-3">
-              {[
-                { label: "Instagram", icon: <FaInstagram size={13} />, link: "https://instagram.com/dyahgputri" },
-                { label: "LinkedIn", icon: <FaLinkedin size={13} />, link: "https://linkedin.com" },
-                { label: "GitHub", icon: <FaGithub size={13} />, link: "https://github.com/dynamic" },
-                { label: "Email", icon: <FaEnvelope size={13} />, link: "mailto:ghaniyaputridyah@gmail.com" },
-              ].map((item) => (
-                <a 
-                  key={item.label} 
-                  href={item.link} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="flex flex-1 justify-between items-center p-4 rounded-xl bg-white/60 dark:bg-slate-950/40 backdrop-blur-md border border-slate-200/60 dark:border-slate-900/80 hover:border-blue-500/30 dark:hover:border-blue-500/20 shadow-sm hover:shadow-md transition-all duration-300 group"
-                >
-                  <div className="flex items-center gap-3 text-slate-600 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                    <span className="p-1.5 bg-slate-100 dark:bg-slate-900 rounded-lg group-hover:bg-blue-50 dark:group-hover:bg-blue-950/50 transition-colors flex items-center justify-center">
-                      {item.icon}
-                    </span>
-                    <span className="text-[11px] font-bold uppercase tracking-wider">{item.label}</span>
-                  </div>
-                  <ArrowIcon size={13} className="text-slate-400 group-hover:text-blue-500 dark:group-hover:text-blue-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
-                </a>
-              ))}
-
-              <div className="flex flex-1 justify-between items-center p-4 rounded-xl bg-white/60 dark:bg-slate-950/40 backdrop-blur-md border border-slate-200/60 dark:border-slate-900/80 shadow-sm text-[11px]">
-                <div className="flex items-center gap-3 text-slate-600 dark:text-slate-400">
-                  <span className="p-1.5 bg-slate-100 dark:bg-slate-900 rounded-lg flex items-center justify-center">
-                    <FaMapMarkerAlt size={13} />
-                  </span>
-                  <span className="font-bold uppercase tracking-wider">Location</span>
-                </div>
-                <span className="text-slate-500/80 dark:text-slate-400/80 font-medium tracking-wide text-right">Kuningan, Jawa Barat</span>
+            <div className="flex-1 flex flex-col justify-between space-y-2.5">
+              <div className="flex flex-col space-y-2.5">
+                {[
+                  { label: "Instagram", icon: <FaInstagram size={15} />, link: "https://instagram.com/dyahgputri" },
+                  { label: "LinkedIn", icon: <FaLinkedin size={15} />, link: "https://linkedin.com" },
+                  { label: "GitHub", icon: <FaGithub size={15} />, link: "https://github.com/dynamic" },
+                  { label: "Email", icon: <FaEnvelope size={15} />, link: "mailto:ghaniyaputridyah@gmail.com" },
+                ].map((item) => (
+                  <a 
+                    key={item.label} 
+                    href={item.link} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    title={item.label}
+                    className="flex justify-between items-center p-3.5 rounded-2xl bg-white dark:bg-slate-900 border-[1.5px] border-slate-400 dark:border-slate-600 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.08)] hover:border-slate-950 dark:hover:border-white transition-all duration-300 group"
+                  >
+                    <div className="flex items-center gap-3 text-slate-700 dark:text-slate-300 group-hover:text-slate-950 dark:group-hover:text-white transition-colors">
+                      <span className="p-2 bg-slate-100 dark:bg-slate-800 rounded-xl group-hover:bg-slate-950 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-slate-950 transition-colors flex items-center justify-center">
+                        {item.icon}
+                      </span>
+                      <span className="text-xs font-black uppercase tracking-wider">{item.label}</span>
+                    </div>
+                    <ArrowIcon size={14} className="text-slate-400 group-hover:text-slate-950 dark:group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
+                  </a>
+                ))}
               </div>
-            </div>
-          </div>
 
-          <div className="md:col-span-7 flex flex-col">
+              <a 
+                href="https://maps.app.goo.gl/gwrCNMxgf17ZxW7g8"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Kuningan, Jawa Barat"
+                className="flex justify-between items-center p-3.5 rounded-2xl bg-white dark:bg-slate-900 border-[1.5px] border-slate-400 dark:border-slate-600 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.08)] hover:border-slate-950 dark:hover:border-white transition-all duration-300 group"
+              >
+                <div className="flex items-center gap-3 text-slate-700 dark:text-slate-300 group-hover:text-slate-950 dark:group-hover:text-white transition-colors">
+                  <span className="p-2 bg-slate-100 dark:bg-slate-800 rounded-xl group-hover:bg-slate-950 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-slate-950 transition-colors flex items-center justify-center">
+                    <FaMapMarkerAlt size={15} />
+                  </span>
+                  <span className="text-xs font-black uppercase tracking-wider">Location</span>
+                </div>
+                <ArrowIcon size={14} className="text-slate-400 group-hover:text-slate-950 dark:group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
+              </a>
+            </div>
+          </motion.div>
+
+          {/* KOLOM KANAN: Send a Message Form */}
+          <motion.div variants={itemVariants} className="md:col-span-7 flex flex-col -mt-2 md:mt-0">
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 px-1 mb-2.5">Send a Message</h4>
+
             <form onSubmit={handleSubmit} className="flex-1 flex flex-col justify-between space-y-3">
               <div className="grid md:grid-cols-2 gap-3">
                 <input 
@@ -118,7 +168,7 @@ export default function ContactSection() {
                   onChange={handleChange}
                   placeholder="Name" 
                   required
-                  className="w-full px-5 py-4 text-xs rounded-xl bg-white/60 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-900/80 text-slate-900 dark:text-white outline-none focus:border-blue-500/40 dark:focus:border-blue-500/30 shadow-inner transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600" 
+                  className="w-full px-4 py-3.5 text-xs rounded-2xl bg-white dark:bg-slate-900 border-[1.5px] border-slate-400 dark:border-slate-600 text-slate-950 dark:text-white outline-none focus:border-slate-950 dark:focus:border-white shadow-xs transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500 font-medium" 
                 />
                 <input 
                   type="email" 
@@ -127,7 +177,7 @@ export default function ContactSection() {
                   onChange={handleChange}
                   placeholder="Email" 
                   required
-                  className="w-full px-5 py-4 text-xs rounded-xl bg-white/60 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-900/80 text-slate-900 dark:text-white outline-none focus:border-blue-500/40 dark:focus:border-blue-500/30 shadow-inner transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600" 
+                  className="w-full px-4 py-3.5 text-xs rounded-2xl bg-white dark:bg-slate-900 border-[1.5px] border-slate-400 dark:border-slate-600 text-slate-950 dark:text-white outline-none focus:border-slate-950 dark:focus:border-white shadow-xs transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500 font-medium" 
                 />
               </div>
               
@@ -138,7 +188,7 @@ export default function ContactSection() {
                 onChange={handleChange}
                 placeholder="Subject" 
                 required
-                className="w-full px-5 py-4 text-xs rounded-xl bg-white/60 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-900/80 text-slate-900 dark:text-white outline-none focus:border-blue-500/40 dark:focus:border-blue-500/30 shadow-inner transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600" 
+                className="w-full px-4 py-3.5 text-xs rounded-2xl bg-white dark:bg-slate-900 border-[1.5px] border-slate-400 dark:border-slate-600 text-slate-950 dark:text-white outline-none focus:border-slate-950 dark:focus:border-white shadow-xs transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500 font-medium" 
               />
               
               <textarea 
@@ -148,28 +198,29 @@ export default function ContactSection() {
                 onChange={handleChange}
                 placeholder="Your message..." 
                 required
-                className="w-full flex-1 px-5 py-4 text-xs rounded-xl bg-white/60 dark:bg-slate-950/40 border border-slate-200/60 dark:border-slate-900/80 text-slate-900 dark:text-white outline-none focus:border-blue-500/40 dark:focus:border-blue-500/30 shadow-inner transition-all placeholder:text-slate-400 dark:placeholder:text-slate-600 resize-none"
+                className="w-full flex-1 px-4 py-3.5 text-xs rounded-2xl bg-white dark:bg-slate-900 border-[1.5px] border-slate-400 dark:border-slate-600 text-slate-950 dark:text-white outline-none focus:border-slate-950 dark:focus:border-white shadow-xs transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500 resize-none font-medium"
               ></textarea>
               
               {status === "success" && (
-                <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold tracking-wide px-1">✓ Message sent successfully!</p>
+                <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold tracking-wide px-1">✓ Message sent successfully!</p>
               )}
               {status === "error" && (
-                <p className="text-[10px] text-rose-600 dark:text-rose-400 font-bold tracking-wide px-1">✕ Failed to send. Please try again.</p>
+                <p className="text-[11px] text-rose-600 dark:text-rose-400 font-bold tracking-wide px-1">✕ Failed to send. Please try again.</p>
               )}
 
               <button 
                 type="submit" 
                 disabled={status === "loading"}
-                className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-slate-950 hover:bg-slate-900 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 text-[10px] font-black uppercase tracking-widest transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border-[1.5px] border-slate-950 dark:border-white bg-slate-950 hover:bg-slate-900 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 text-xs font-black uppercase tracking-wider transition-all duration-200 shadow-md hover:shadow-lg active:scale-95 disabled:opacity-50"
               >
                 <span>{status === "loading" ? "Sending..." : "Send Message"}</span>
-                {status !== "loading" && <IoSend size={11} />}
+                {status !== "loading" && <IoSend size={13} />}
               </button>
             </form>
-          </div>
+          </motion.div>
+
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

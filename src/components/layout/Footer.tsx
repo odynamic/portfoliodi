@@ -23,8 +23,8 @@ export default function Footer() {
   if (pathname.startsWith("/admin") || pathname === "/login") return null;
 
   return (
-    <footer className="w-full py-4 bg-[#F4F4F5] dark:bg-[#070C19] border-t border-slate-200/50 dark:border-slate-800/50 transition-colors duration-500">
-      <div className="mx-auto max-w-5xl px-8 flex items-center justify-between text-[8px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-600">
+    <footer className="w-full py-5 bg-[#F4F4F5] dark:bg-slate-950 border-t-[1.5px] border-slate-300 dark:border-slate-800 transition-colors duration-500">
+      <div className="mx-auto max-w-4xl px-6 sm:px-8 flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">
         
         <p>© {currentYear} DGP. All rights reserved.</p>
 
@@ -34,9 +34,9 @@ export default function Footer() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
-            <span>Available for work</span>
+            <span className="text-slate-950 dark:text-white">Available for work</span>
           </div>
-          <span className="pl-4 border-l border-slate-300 dark:border-slate-700 tabular-nums">
+          <span className="pl-4 border-l-[1.5px] border-slate-300 dark:border-slate-700 tabular-nums text-slate-950 dark:text-white">
             {time}
           </span>
         </div>

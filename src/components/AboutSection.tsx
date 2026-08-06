@@ -1,17 +1,45 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { motion, Variants } from "framer-motion";
-import { Calendar, Briefcase, Globe, Download, ArrowRight, GraduationCap } from "lucide-react";
+import { Download, ArrowRight, GraduationCap, Layout, LineChart, Code2 } from "lucide-react";
 
+// Variants untuk tombol
 const buttonVariants: Variants = {
-  hover: { 
-    scale: 1.05, 
+  hover: {
+    scale: 1.03,
     y: -2,
-    boxShadow: "0px 10px 20px rgba(0,0,0,0.15)",
-    transition: { type: "spring", stiffness: 400, damping: 10 }
+    transition: { type: "spring", stiffness: 400, damping: 12 },
   },
-  tap: { scale: 0.95 }
+  tap: {
+    scale: 0.95,
+    y: 1,
+    transition: { type: "spring", stiffness: 500, damping: 10 },
+  },
+};
+
+// Variants untuk container 3 kotak spesialisasi (Stagger Animation)
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+// Variants untuk item individual di spesialisasi
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 16, scale: 0.96 },
+  show: { 
+    opacity: 1, 
+    y: 0, 
+    scale: 1,
+    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
+  },
 };
 
 type AboutProps = {
@@ -20,144 +48,172 @@ type AboutProps = {
 
 export default function About({ projects = [] }: AboutProps) {
   const fadeInUp = {
-    initial: { opacity: 0, y: 15 },
+    initial: { opacity: 0, y: 18 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, margin: "-40px" },
-    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const }
+    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as const }
   };
+
+  const specializations = [
+    {
+      icon: <Code2 size={18} />,
+      title: "Full-Stack Development",
+    },
+    {
+      icon: <LineChart size={18} />,
+      title: "Data Analytics",
+    },
+    {
+      icon: <Layout size={18} />,
+      title: "UI/UX Design",
+    }
+  ];
 
   return (
     <section 
       id="about" 
-      className="relative w-full py-16 md:py-20 scroll-mt-24 bg-[#F4F4F5] dark:bg-[#070C19] transition-colors duration-500 border-t border-gray-200/30 dark:border-gray-900/40 overflow-hidden"
+      className="relative w-full pt-10 pb-8 md:pt-14 md:pb-10 scroll-mt-24 bg-slate-100/90 dark:bg-slate-950 transition-colors duration-500 overflow-hidden font-sans selection:bg-slate-200"
     >
-      <motion.div 
-        animate={{
-          backgroundPosition: ["0px 0px", "-40px 40px"]
+      {/* BACKGROUND GRID */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-70 dark:opacity-30"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='28' height='28' viewBox='0 0 28 28' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h28v28H0z' fill='none'/%3E%3Cpath d='M28 0v28H0' fill='none' stroke='%2394a3b8' stroke-width='1.2'/%3E%3C/svg%3E")`,
+          backgroundSize: '28px 28px'
         }}
-        transition={{
-          duration: 3, 
-          repeat: Infinity,
-          ease: "linear"
-        }}
-        className="absolute inset-0 bg-[linear-gradient(to_right,#8080801a_1px,transparent_1px),linear-gradient(to_bottom,#8080801a_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none [mask-image:radial-gradient(ellipse_80%_70%_at_50%_50%,#000_70%,transparent_100%)]" 
       />
 
-      <motion.div 
-        animate={{ scale: [1, 1.15, 1], opacity: [0.9, 1, 0.9] }}
-        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/3 right-1/4 w-96 h-96 bg-blue-500/[0.07] dark:bg-blue-500/[0.02] rounded-full blur-[120px] pointer-events-none" 
-      />
-      <motion.div 
-        animate={{ scale: [1, 1.15, 1], opacity: [0.9, 1, 0.9] }}
-        transition={{ duration: 9, delay: 4.5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-1/3 left-1/4 w-96 h-96 bg-cyan-500/[0.07] dark:bg-cyan-500/[0.02] rounded-full blur-[120px] pointer-events-none" 
-      />
-
-      <div className="mx-auto max-w-5xl px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6 -mt-12">
-          {[
-            { 
-              icon: <Calendar />, 
-              label: "3 Years+", 
-              sub: "Coding Experience", 
-              color: "from-blue-500 to-indigo-500" 
-            },
-            { 
-              icon: <Briefcase />, 
-              label: `${projects?.length || 0} Projects`, 
-              sub: "Successfully Completed", 
-              color: "from-cyan-500 to-blue-500" 
-            },
-            { 
-              icon: <Globe />, 
-              label: "Open to Work", 
-              sub: "Available for Hire", 
-              color: "from-emerald-500 to-teal-500", 
-              isGreen: true 
-            },
-          ].map((stat, i) => (
-            <motion.div 
-              key={i} 
-              {...fadeInUp} 
-              transition={{ delay: i * 0.1 }}
-              whileHover={{ y: -8, scale: 1.02 }}
-              className="p-5 rounded-2xl border border-gray-200/50 dark:border-gray-800/30 bg-white/95 dark:bg-slate-950/40 backdrop-blur-sm flex items-center gap-4 shadow-sm hover:shadow-lg transition-all duration-300"
-            >
-              <div className={`p-2.5 rounded-xl text-white bg-gradient-to-br ${stat.color}`}>
-                {stat.icon}
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 relative z-10">
+        
+        {/* MAIN LAYOUT GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-x-8 gap-y-5 items-stretch">
+          
+          {/* SISI KIRI: Header, Foto, Kampus */}
+          <div className="md:col-span-5 flex flex-col justify-between gap-4">
+            <div className="space-y-4">
+              {/* Judul Utama */}
+              <div className="space-y-1.5 w-full">
+                <motion.h2 
+                  {...fadeInUp}
+                  className="text-3xl sm:text-4xl font-black text-slate-950 dark:text-white tracking-[-0.03em]"
+                >
+                  About Me
+                </motion.h2>
+                
+                <motion.div 
+                  initial={{ width: 0 }}
+                  whileInView={{ width: 48 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.15 }}
+                  className="h-1 bg-slate-950 dark:bg-white rounded-full" 
+                />
               </div>
-              <div>
-                <h4 className={`text-base font-black ${stat.isGreen ? "text-emerald-600 dark:text-emerald-400" : "text-gray-900 dark:text-white"}`}>
-                  {stat.label}
-                </h4>
-                <p className="text-[11px] font-semibold text-gray-400 dark:text-gray-500">{stat.sub}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-x-12 gap-y-6 items-start mt-0">
-          <div className="md:col-span-4 flex flex-col items-start gap-7">
-            <div className="space-y-3 w-full">
-              <p className="text-blue-600 dark:text-blue-400 font-black tracking-[0.3em] text-[10px] uppercase bg-blue-500/10 dark:bg-blue-500/20 px-3 py-1 rounded-md inline-block backdrop-blur-md">
-                Background
-              </p>
-              <h2 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white tracking-tight">About Me</h2>
-              
+              {/* GAMBAR PROFIL (Hover Zoom & Floating Effect) */}
               <motion.div 
-                initial={{ width: 0 }}
-                whileInView={{ width: 60 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="h-1.5 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full shadow-[0_2px_8px_rgba(37,99,235,0.3)]" 
-              />
+                {...fadeInUp}
+                whileHover={{ y: -4, scale: 1.01 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="mt-4 relative w-full aspect-[4/3.5] rounded-2xl overflow-hidden border-2 border-slate-300 dark:border-slate-700 bg-slate-200 dark:bg-slate-800/50 shadow-sm hover:shadow-md group transition-shadow duration-300"
+              >
+                <Image 
+                  src="/dyah.jpg" 
+                  alt="Dyah Ghaniya Putri"
+                  fill
+                  className="object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
+                />
+              </motion.div>
             </div>
 
+            {/* ELEMEN KAMPUS (Hover Bounce & Icon Pulse) */}
+{/* ELEMEN KAMPUS (Hover Bounce & Icon Pulse) */}
+<motion.div 
+  {...fadeInUp}
+  whileHover={{ y: -3, scale: 1.01 }}
+  transition={{ type: "spring", stiffness: 400, damping: 15 }}
+  className="flex items-center gap-3 p-3.5 w-full rounded-2xl border-2 border-slate-400 dark:border-slate-600 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 group cursor-default"
+>
+  <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-600 group-hover:bg-slate-950 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-slate-950 transition-colors duration-300">
+    <motion.div
+      animate={{ y: [0, -2, 0] }}
+      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+    >
+      <GraduationCap size={18} />
+    </motion.div>
+  </div>
+  <div className="space-y-0.5">
+    <p className="text-xs font-black tracking-wider text-slate-900 dark:text-slate-200">
+      Informatics
+    </p>
+    <p className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+      Jenderal Soedirman University
+    </p>
+  </div>
+</motion.div>
+          </div>
+
+          {/* SISI KANAN: 3 Kotak Spesialisasi -> Kotak Profil -> Buttons */}
+          <div className="md:col-span-7 flex flex-col justify-between gap-4">
+            
+            {/* 1. 3 KOTAK SPESIALISASI (STAGGERED ENTER + HOVER LIFT) */}
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: "-40px" }}
+              className="grid grid-cols-1 sm:grid-cols-3 gap-3"
+            >
+              {specializations.map((spec, i) => (
+                <motion.div
+                  key={i}
+                  variants={itemVariants}
+                  whileHover={{ 
+                    y: -5, 
+                    scale: 1.02,
+                    borderColor: "rgba(148, 163, 184, 0.8)",
+                  }}
+                  transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                  className="p-4 sm:p-4.5 rounded-2xl border-2 border-slate-300 dark:border-slate-700 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm flex items-center gap-3 shadow-sm hover:shadow-md transition-shadow duration-300 group cursor-default min-h-[60px]"
+                >
+                  <motion.span 
+                    whileHover={{ rotate: 8, scale: 1.1 }}
+                    className="p-2 rounded-xl bg-slate-950 dark:bg-slate-800 text-white shadow-xs shrink-0 group-hover:bg-slate-800 dark:group-hover:bg-slate-700 transition-colors"
+                  >
+                    {spec.icon}
+                  </motion.span>
+                  <span className="text-xs sm:text-[13px] font-extrabold text-slate-900 dark:text-white leading-snug">
+                    {spec.title}
+                  </span>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* 2. KOTAK NAMA & PARAGRAF (ELEVATION ON HOVER) */}
             <motion.div 
               {...fadeInUp}
-              className="flex items-start gap-3.5 text-gray-400 dark:text-gray-500 group select-none"
+              whileHover={{ y: -2 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="bg-white dark:bg-slate-900 border-2 border-slate-400 dark:border-slate-600 ring-1 ring-slate-900/10 dark:ring-white/10 rounded-3xl p-6 sm:p-7 shadow-lg hover:shadow-xl transition-shadow duration-300 flex-1 flex flex-col justify-center"
             >
-              <div className="mt-0.5 text-blue-600 dark:text-blue-400/80 group-hover:text-cyan-500 transition-colors duration-300">
-                <motion.div
-                  animate={{ y: [0, -2, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <GraduationCap size={19} />
-                </motion.div>
-              </div>
-              <div className="space-y-1">
-                <p className="text-[11px] font-black tracking-[0.18em] uppercase text-gray-900 dark:text-gray-300">
-                  Informatics
+              <h3 className="text-2xl sm:text-3xl font-black text-slate-950 dark:text-white tracking-tight">
+                Dyah Ghaniya Putri
+              </h3>
+
+              <div className="mt-4 space-y-3.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+                <p>
+                  I focus on delivering complete technology solutions by connecting full-stack web development, user interface design, and data analytics. My work spans the entire digital product cycle, from designing intuitive wireframes in UI/UX tools to building responsive frontend interfaces and managing database workflows that power practical web applications.
                 </p>
-                <p className="text-[13px] font-semibold tracking-wide text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Jenderal Soedirman University
+                <p>
+                  Alongside software engineering, I apply data analytics to extract meaningful operational insights and translate them into clear visual dashboards. By combining technical full-stack capabilities with analytical problem-solving, I aim to build reliable digital systems that streamline complex tasks and support sound strategic decisions.
                 </p>
               </div>
             </motion.div>
-          </div>
 
-          <div className="md:col-span-8 space-y-5 text-[14px] md:text-[15px] text-gray-500 dark:text-gray-400 leading-relaxed font-medium">
-            <motion.h3 
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="text-xl md:text-2xl font-black tracking-tight leading-snug text-gray-900 dark:text-white"
+            {/* 3. BUTTONS (SPRING HOVER) */}
+            <motion.div 
+              {...fadeInUp}
+              className="flex flex-wrap items-center gap-3 pt-1"
             >
-              Translating operational needs into practical,{" "}
-              <span className="bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-400 bg-clip-text text-transparent">
-                functional web applications
-              </span>.
-            </motion.h3>
-            
-            <p>
-              Hi, I'm Dyah. I focus on developing web applications through structural problem solving, starting from initial requirement analysis and database design to feature implementation. For me, coding is a practical process of turning manual workflows into systematic digital solutions that make tasks run more effectively.
-            </p>
-            <p>
-              During my IT Operations internship, I applied this mindset by building an internal asset tracking application from scratch to solve actual inventory problems. Outside of development work, my experience managing communications in campus student committees helped me build reliable coordination habits and a clear approach to working within a team.
-            </p>
-            
-            <div className="flex flex-wrap items-center gap-4 pt-2">
               <motion.a 
                 href="https://drive.google.com/file/d/1hC67zOxAIbAgidDYOYCfrSQCI9QP52ua/view?usp=sharing" 
                 target="_blank" 
@@ -165,9 +221,9 @@ export default function About({ projects = [] }: AboutProps) {
                 variants={buttonVariants}
                 whileHover="hover"
                 whileTap="tap"
-                className="flex items-center justify-center gap-2 bg-gray-950 dark:bg-white text-white dark:text-gray-950 px-6 py-3.5 rounded-xl font-bold text-[11px] uppercase tracking-wider shadow-sm"
+                className="flex items-center justify-center gap-2 bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 px-6 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider shadow-md transition-colors"
               >
-                Download CV <Download size={13} />
+                Download CV <Download size={15} />
               </motion.a>
               
               <motion.a 
@@ -175,12 +231,16 @@ export default function About({ projects = [] }: AboutProps) {
                 variants={buttonVariants}
                 whileHover="hover"
                 whileTap="tap"
-                className="flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white px-6 py-3.5 rounded-xl font-bold text-[11px] uppercase tracking-wider transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"              >
-                View Projects <ArrowRight size={13} />
+                className="flex items-center justify-center gap-2 border-2 border-slate-300 dark:border-slate-700 bg-white/90 dark:bg-slate-900/90 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-100 px-6 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider shadow-sm transition-colors"
+              >
+                View Projects <ArrowRight size={15} />
               </motion.a>
-            </div>
+            </motion.div>
+
           </div>
+
         </div>
+
       </div>
     </section>
   );

@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.variable} ${jakarta.variable} antialiased bg-white dark:bg-[#0A0F1D] transition-colors duration-300`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <NavbarWrapper /> 
-          <main className="pt-16">
+          <main className="pt-14">
             {children}
           </main>
         </ThemeProvider>

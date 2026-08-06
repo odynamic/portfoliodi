@@ -78,136 +78,128 @@ export default function ExperienceSection() {
     ? filteredExperiences 
     : filteredExperiences.slice(0, INITIAL_DISPLAY_COUNT);
 
-  if (loading) return <div className="py-20 text-center text-gray-500 font-bold animate-pulse">Loading experience engine...</div>;
+  if (loading) {
+    return (
+      <div className="py-12 text-center text-slate-500 font-mono tracking-widest text-xs animate-pulse bg-slate-100/90 dark:bg-slate-950">
+        LOADING DATA...
+      </div>
+    );
+  }
 
   return (
     <section 
       id="experience" 
-      className="relative w-full min-h-screen pt-12 pb-6 bg-[#F4F4F5] dark:bg-[#070C19] overflow-hidden transition-colors duration-500 border-t border-gray-200/30 dark:border-gray-900/40 scroll-mt-24"
-    >        
+      className="relative w-full pt-3 pb-6 md:pt-4 md:pb-8 bg-slate-100/90 dark:bg-slate-950 transition-colors duration-500 overflow-hidden font-sans selection:bg-slate-200 scroll-mt-24"
+    >      
+      {/* BACKGROUND GRID */}
       <div 
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] pointer-events-none rounded-full"
+        className="absolute inset-0 pointer-events-none opacity-70 dark:opacity-30"
         style={{
-          background: "radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, rgba(37, 99, 235, 0) 70%)"
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='28' height='28' viewBox='0 0 28 28' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h28v28H0z' fill='none'/%3E%3Cpath d='M28 0v28H0' fill='none' stroke='%2394a3b8' stroke-width='1.2'/%3E%3C/svg%3E")`,
+          backgroundSize: '28px 28px'
         }}
       />
 
-      <motion.div 
-        animate={{ backgroundPosition: ["0px 0px", "-40px 40px"] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-0 bg-[linear-gradient(to_right,#8080801a_1px,transparent_1px),linear-gradient(to_bottom,#8080801a_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none [mask-image:radial-gradient(ellipse_80%_70%_at_50%_50%,#000_70%,transparent_100%)]" 
-      />
-
-      <motion.div 
-        animate={{ scale: [1, 1.1, 1], opacity: [0.8, 1, 0.8] }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-1/3 left-1/4 w-96 h-96 bg-blue-500/[0.06] dark:bg-blue-500/[0.02] rounded-full blur-[120px] pointer-events-none" 
-      />
-
-      <div className="mx-auto max-w-4xl px-8 relative z-10">
+      <div className="mx-auto max-w-4xl px-6 sm:px-8 relative z-10">
         
-        <div className="text-center mb-6 space-y-3">
-          <div className="inline-block">
-            <span className="px-4 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/5 backdrop-blur-md text-[9px] font-black uppercase tracking-[0.3em] text-blue-600 dark:text-blue-400 shadow-sm">
-              Professional Journey
-            </span>
+        {/* HEADER SECTION & TAB SWITCHER */}
+        <div className="flex flex-col items-center mt-2 mb-2 text-center">
+          <motion.h2 
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="text-2xl sm:text-3xl font-black tracking-[-0.03em] text-slate-950 dark:text-white mb-2"
+          >
+            My Experiences
+          </motion.h2>
+
+          <div className="flex justify-center mb-2.5">
+            <motion.div
+              initial={{ width: 0 }}
+              whileInView={{ width: 36 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+              className="h-1 bg-slate-950 dark:bg-white rounded-full"
+            />
           </div>
 
-          <div className="space-y-1">
-            <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
-              Experiences & Roles
-            </h2>
-            
-            <div className="flex justify-center">
-              <motion.div 
-                initial={{ width: 0 }} 
-                whileInView={{ width: "60px" }} 
-                viewport={{ once: true }} 
-                className="h-1 bg-blue-600 rounded-full shadow-[0_0_8px_rgba(37,99,235,0.5)]" 
-              />
-            </div>
-          </div>
-        </div>
-        
-        <div className="flex justify-center -mt-2 mb-3">
-          <div className="relative flex p-1 bg-white dark:bg-slate-900/60 md:backdrop-blur-xl rounded-xl border border-slate-200/60 dark:border-slate-800/60 shadow-sm group">            {[
-              { id: "All", label: "All", icon: <Layers size={11} /> },
-              { id: "Industry", label: "Industry", icon: <Briefcase size={11} /> },
-              { id: "Community", label: "Community", icon: <Users size={11} /> }
-            ].map((tab) => (
-              <button 
-                key={tab.id} 
-                onClick={() => {
-                  setActiveExpTab(tab.id);
-                  setIsExpanded(false);
-                }} 
-                className={`relative flex items-center gap-2 px-5 py-1.5 text-[10px] font-bold uppercase tracking-widest z-10 transition-all duration-300 ${
-                  activeExpTab === tab.id ? "text-white font-black scale-105" : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
-                }`}
-              >
-                <span className={`transition-colors duration-300 flex items-center justify-center ${activeExpTab === tab.id ? "text-white" : "text-slate-400 dark:text-slate-500"}`}>
-                  {tab.icon}
-                </span>
-                <span className="relative z-10">{tab.label}</span>
-                {activeExpTab === tab.id && (
-                  <motion.div 
-                    layoutId="activeExpIndicator" 
-                    className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 rounded-lg shadow-[0_2px_10px_rgba(37,99,235,0.2)] -z-10" 
-                    transition={{ type: "spring", stiffness: 350, damping: 26 }}
-                  />
-                )}
-              </button>
-            ))}
+          <div className="inline-flex items-center p-1 bg-slate-200/80 dark:bg-slate-900/90 backdrop-blur-md rounded-full border border-slate-300 dark:border-slate-800 shadow-inner mt-3">            {[
+              { id: "All", label: "All" },
+              { id: "Industry", label: "Industry" },
+              { id: "Community", label: "Community" }
+            ].map((tab) => {
+              const isActive = activeExpTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => {
+                    setActiveExpTab(tab.id);
+                    setIsExpanded(false);
+                  }}
+                  className={`relative flex items-center gap-1.5 px-5 py-1.5 text-xs font-black uppercase tracking-wider transition-colors duration-300 z-10 ${
+                    isActive
+                      ? "text-white dark:text-slate-950"
+                      : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+                  }`}
+                >
+                  <span className={`relative z-10 flex items-center gap-1.5 transition-colors duration-300 ${isActive ? "text-white dark:text-slate-950" : "text-slate-400 dark:text-slate-500"}`}>
+                    {tab.label}
+                  </span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="exp-tab-indicator"
+                      className="absolute inset-0 bg-slate-950 dark:bg-white rounded-full shadow-md -z-10"
+                      transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                    />
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        <div className="relative space-y-3 pt-1 min-h-0">
-          <div className="absolute left-[3.5px] md:left-1/2 w-[4px] h-full bg-gradient-to-b from-blue-600/80 via-blue-500/60 to-transparent md:-translate-x-1/2 z-0" />          
-          
+        <div className="relative space-y-4 pt-1 min-h-0 mt-6">
+          <div className="absolute left-[3.5px] md:left-1/2 w-[4px] h-full bg-slate-300 dark:bg-slate-800 md:-translate-x-1/2 z-0" />         
           <AnimatePresence mode="popLayout">
-            {displayedExperiences.map((exp: any, idx: number) => (
+          {displayedExperiences.map((exp: any, idx: number) => {
+            const badgeType = exp.type;
+            const badgeColorClass = 
+              badgeType === 'Internship' ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20' :
+              badgeType === 'Work' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' :
+              badgeType === 'Committee' ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20' :
+              'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20';
+
+            return (
               <motion.div 
                 key={exp.id} 
                 layout
-                initial={{ opacity: 0, y: 12 }} 
+                initial={{ opacity: 0, y: 20 }} 
                 animate={{ opacity: 1, y: 0 }} 
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.4 }} 
+                exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }} 
                 className="relative group pl-9 md:pl-0"
               >
-                <div className="absolute left-[4.5px] md:left-1/2 w-5 h-5 bg-white dark:bg-[#070C19] border-2 border-blue-600 rounded-full md:-translate-x-1/2 flex items-center justify-center transition-all duration-300 z-20 group-hover:scale-110 group-hover:border-indigo-500 shadow-[0_0_10px_rgba(37,99,235,0.15)] group-hover:shadow-[0_0_20px_rgba(99,102,241,0.6)]">
-                  <div className="w-1.5 h-1.5 bg-blue-600 dark:bg-indigo-400 rounded-full group-hover:animate-ping absolute inset-0 m-auto opacity-0 group-hover:opacity-100 bg-indigo-500" />
-                  <div className="w-1.5 h-1.5 bg-blue-600 dark:bg-indigo-400 rounded-full z-10" />
+                <div className="absolute left-[4.5px] md:left-1/2 w-5 h-5 bg-white dark:bg-slate-900 border-2 border-slate-400 dark:border-slate-600 rounded-full md:-translate-x-1/2 flex items-center justify-center transition-all duration-300 z-20 group-hover:scale-110 group-hover:border-slate-950 dark:group-hover:border-white shadow-xs">
+                  <div className="w-1.5 h-1.5 bg-slate-950 dark:bg-white rounded-full z-10" />
                 </div>
                 
                 <div className="md:grid md:grid-cols-2 gap-12 text-left md:text-inherit">
                   <div className={`${idx % 2 === 0 ? "md:col-start-1 md:text-right" : "md:col-start-2 md:text-left"}`}>
                     <motion.div 
-                      whileHover={{ y: -4, scale: 1.01 }} 
-                      transition={{ type: "spring", stiffness: 400, damping: 22 }}
-                      className="p-4 rounded-2xl bg-white/90 dark:bg-slate-950/70 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:shadow-lg transition-all duration-300 relative overflow-hidden flex flex-col justify-between"
+                      whileHover={{ y: -6, scale: 1.02 }} 
+                      transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                      className="p-4 rounded-3xl bg-white dark:bg-slate-900 border-2 border-slate-400 dark:border-slate-600 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-300 relative overflow-hidden flex flex-col justify-between"
                     >
-                      <div className={`absolute inset-y-0 w-1 bg-gradient-to-b from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-purple-500 ${
-                        idx % 2 === 0 ? "right-0 left-auto md:right-0 md:left-auto" : "left-0 right-auto md:left-0 md:right-auto"
-                      }`} />
-
                       <div className={`w-full flex flex-col ${idx % 2 === 0 ? "md:items-end md:text-right" : "md:items-start md:text-left"}`}>
-                        <span className={`inline-flex items-center text-[8px] font-black uppercase tracking-[0.2em] px-2.5 py-0.5 rounded-md border mb-2 shrink-0 w-fit ${
-                          exp.type === 'Memory' || exp.type === 'Internship'
-                            ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20'
-                            : exp.type === 'Work'
-                            ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
-                            : exp.type === 'Committee'
-                            ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
-                            : 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20'
-                        }`}>
+                        <span className={`inline-flex items-center text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md border mb-2 shrink-0 w-fit ${badgeColorClass}`}>
                           {exp.type === 'Internship' ? 'Internship' : exp.type === 'Work' ? 'Full-time' : exp.type === 'Committee' ? 'Committee' : 'Organization'}
                         </span>
 
-                        <h3 className="text-sm font-black text-slate-900 dark:text-white tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">{exp.role}</h3>
+                        <h3 className="text-base font-black text-slate-950 dark:text-white tracking-tight">{exp.role}</h3>
                         
-                        <div className={`flex flex-wrap items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500 font-medium tracking-wide mt-1 mb-3 ${idx % 2 === 0 ? "md:justify-end" : "md:justify-start"}`}>
-                          <span className="font-extrabold text-slate-700 dark:text-slate-300">
+                        <div className={`flex flex-wrap items-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400 font-medium tracking-wide mt-1 mb-3 ${idx % 2 === 0 ? "md:justify-end" : "md:justify-start"}`}>
+                          <span className="font-extrabold text-slate-900 dark:text-slate-200">
                             {exp.company}
                           </span> 
                           <span>•</span>
@@ -221,141 +213,141 @@ export default function ExperienceSection() {
                         </div>
                       </div>
 
-                      <button 
+                      <motion.button 
+                        whileTap={{ scale: 0.97 }}
+                        whileHover={{ scale: 1.01 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 20 }}
                         onClick={() => setSelectedExp(exp)} 
-                        className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50/80 hover:bg-white dark:bg-slate-900/40 dark:hover:bg-slate-900/80 text-slate-700 dark:text-slate-300 text-[9px] font-extrabold uppercase tracking-widest transition-all duration-300 group/btn shadow-sm"
+                        className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-2xl border-2 border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 text-xs font-black uppercase tracking-wider transition-colors duration-300 group/btn shrink-0"
                       >
-                        <span className="flex items-center gap-1.5 bg-gradient-to-r from-slate-800 to-slate-900 dark:from-slate-200 dark:to-slate-100 bg-clip-text text-transparent group-hover/btn:from-blue-600 group-hover/btn:to-indigo-600 dark:group-hover/btn:from-blue-400 dark:group-hover/btn:to-purple-400 font-black">
-                          Explore Details 
-                          <ArrowUpRight size={11} className="text-slate-400 group-hover/btn:text-blue-500 dark:group-hover/btn:text-indigo-400 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-300" />
-                        </span>
-                      </button>
+                        Explore Details <ArrowUpRight size={13} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-300" />
+                      </motion.button>
                     </motion.div>
                   </div>
                 </div>
               </motion.div>
-            ))}
-          </AnimatePresence>
+            );
+          })}
+        </AnimatePresence>
 
           {filteredExperiences.length === 0 && (
-            <div className="text-center py-10 text-xs text-slate-400">No experiences found in this category.</div>
+            <motion.div 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              className="text-center py-10 text-xs text-slate-400"
+            >
+              No experiences found in this category.
+            </motion.div>
           )}
         </div>
 
         {filteredExperiences.length > INITIAL_DISPLAY_COUNT && (
           <div className="flex justify-center pt-6 md:pt-4 relative z-20 w-full">
-            <button
+            <motion.button
+              whileTap={{ scale: 0.97 }}
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
               onClick={() => setIsExpanded(!isExpanded)}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-full border border-slate-200/60 dark:border-slate-800/50 bg-white/80 dark:bg-slate-950/60 backdrop-blur-md text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-semibold text-[9px] uppercase tracking-widest shadow-sm hover:shadow-[0_4px_12px_rgba(37,99,235,0.1)] dark:hover:shadow-[0_4px_20px_rgba(0,0,0,0.4)] transition-all duration-500 ease-out hover:-translate-y-0.5"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 font-black text-xs uppercase tracking-wider shadow-xs transition-colors duration-300"
             >
               {isExpanded ? (
                 <>
-                  Collapse Journey <ChevronUp size={11} className="transition-transform duration-300 group-hover:-translate-y-0.5" />
+                  Collapse Journey <ChevronUp size={15} />
                 </>
               ) : (
                 <>
-                  Expand Journey ({filteredExperiences.length - INITIAL_DISPLAY_COUNT}) <ChevronDown size={11} className="transition-transform duration-300 group-hover:translate-y-0.5" />
+                  Expand Journey ({filteredExperiences.length - INITIAL_DISPLAY_COUNT}) <ChevronDown size={15} />
                 </>
               )}
-            </button>        
+            </motion.button>      
           </div>
         )}
       </div>
 
       <AnimatePresence>
-        {selectedExp && (
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
-            exit={{ opacity: 0 }} 
-            className="fixed inset-0 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-md z-[100] flex items-center justify-center p-4 overflow-y-auto" 
-            onClick={() => setSelectedExp(null)}
-          >
+        {selectedExp && (() => {
+          const modalBadgeColorClass = 
+            selectedExp.type === 'Internship' ? 'bg-blue-600 dark:bg-blue-500 border-blue-700/50 dark:border-blue-400/50' :
+            selectedExp.type === 'Work' ? 'bg-emerald-600 dark:bg-emerald-500 border-emerald-700/50 dark:border-emerald-400/50' :
+            selectedExp.type === 'Committee' ? 'bg-amber-600 dark:bg-amber-500 border-amber-700/50 dark:border-amber-400/50' :
+            'bg-purple-600 dark:bg-purple-500 border-purple-700/50 dark:border-purple-400/50';
+
+          return (
             <motion.div 
-              initial={{ scale: 0.97, y: 10, opacity: 0 }} 
-              animate={{ scale: 1, y: 0, opacity: 1 }} 
-              exit={{ scale: 0.97, y: 10, opacity: 0 }} 
-              className="bg-white dark:bg-slate-950 w-full max-w-5xl rounded-[2rem] border border-slate-200 dark:border-slate-900 overflow-hidden shadow-2xl grid grid-cols-1 md:grid-cols-12 relative my-auto" 
-              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              exit={{ opacity: 0 }} 
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-slate-950/60 backdrop-blur-md z-[100] flex items-center justify-center p-4 sm:p-6" 
+              onClick={() => setSelectedExp(null)}
             >
-              <button onClick={() => setSelectedExp(null)} className="absolute top-5 right-5 p-2 bg-slate-100 dark:bg-slate-900 text-slate-400 hover:text-red-500 transition-colors rounded-full shadow-sm z-50">
-                <X size={12}/>
-              </button>
-              
-              <div className="md:col-span-5 bg-slate-50/50 dark:bg-slate-900/10 border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-900/60 p-6 flex flex-col justify-between gap-6">
-                <div className="space-y-4 w-full">
-                  <div className="w-full aspect-video rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-950">
-                    <img 
-                      src={selectedExp.image_url || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=500&q=80"} 
-                      alt={selectedExp.role} 
-                      className="w-full h-full object-cover" 
-                    />
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    {(() => {
-                      const badgeStyles = {
-                        Memory: 'bg-blue-600 dark:bg-blue-500 border-blue-700/50 dark:border-blue-400/50',
-                        Internship: 'bg-blue-600 dark:bg-blue-500 border-blue-700/50 dark:border-blue-400/50',
-                        Work: 'bg-emerald-600 dark:bg-emerald-500 border-emerald-700/50 dark:border-emerald-400/50',
-                        Committee: 'bg-amber-600 dark:bg-amber-500 border-amber-700/50 dark:border-amber-400/50',
-                        Organization: 'bg-purple-600 dark:bg-purple-500 border-purple-700/50 dark:border-purple-400/50',
-                        default: 'bg-slate-600 dark:bg-slate-500 border-slate-700/50 dark:border-slate-400/50'
-                      };
-
-                      const currentStyle = typeof selectedExp.type === 'string' && selectedExp.type in badgeStyles
-                        ? badgeStyles[selectedExp.type as keyof typeof badgeStyles]
-                        : badgeStyles.default;
-
-                      return (
-                        <span className={`inline-flex items-center text-[8px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-md border text-white shadow-sm shrink-0 ${currentStyle}`}>
-                          {selectedExp.type === 'Internship' ? 'Internship' : selectedExp.type === 'Work' ? 'Full-time' : selectedExp.type === 'Committee' ? 'Committee' : 'Organization'}
-                        </span>
-                      );
-                    })()}
-                  </div>
-                </div>
-
-                {selectedExp.location && (
-                  <div className="hidden md:flex flex-col gap-2 p-4 rounded-2xl bg-white dark:bg-slate-900/50 border border-slate-100 dark:border-slate-900/60 shadow-[0_2px_10px_rgba(0,0,0,0.01)] w-full">
-                    <h4 className="text-[8px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-[0.15em] mb-0.5">Location Details</h4>
-                    <div className="flex items-center gap-2.5">
-                      <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shrink-0">
-                        <MapPin size={11} />
-                      </div>
-                      <div className="flex flex-col min-w-0">
-                        <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 truncate">{selectedExp.location}</span>
-                      </div>
+              <motion.div 
+                initial={{ scale: 0.96, opacity: 0, y: 15 }} 
+                animate={{ scale: 1, opacity: 1, y: 0 }} 
+                exit={{ scale: 0.96, opacity: 0, y: 15 }} 
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                className="bg-white dark:bg-slate-900 w-full max-w-4xl max-h-[88vh] overflow-y-auto rounded-3xl border border-slate-300 dark:border-slate-700 shadow-2xl relative flex flex-col md:grid md:grid-cols-12" 
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button 
+                  onClick={() => setSelectedExp(null)} 
+                  className="absolute top-4 right-4 p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 transition-colors duration-300 z-50 border border-slate-300 dark:border-slate-700"
+                >
+                  <X size={16}/>
+                </button>
+                
+                <div className="md:col-span-5 p-6 bg-slate-50 dark:bg-slate-900/50 border-b md:border-b-0 md:border-r border-slate-300 dark:border-slate-700 flex flex-col justify-between gap-6">
+                  <div className="space-y-4 w-full">
+                    <div className="w-full aspect-[16/11] rounded-2xl overflow-hidden border border-slate-300 dark:border-slate-700 bg-slate-200 dark:bg-slate-800">
+                      <img 
+                        src={selectedExp.image_url || "/placeholder.jpg"} 
+                        alt={selectedExp.role} 
+                        className="w-full h-full object-cover" 
+                      />
+                    </div>
+                    
+                    <div className="space-y-1.5">
+                      <span className={`inline-flex items-center text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-md border text-white shadow-xs ${modalBadgeColorClass}`}>
+                        {selectedExp.type === 'Internship' ? 'Internship' : selectedExp.type === 'Work' ? 'Full-time' : selectedExp.type === 'Committee' ? 'Committee' : 'Organization'}
+                      </span>
                     </div>
                   </div>
-                )}
-              </div>
 
-              <div className="md:col-span-7 p-6 md:p-8 flex flex-col justify-between overflow-y-auto max-h-[70vh] md:max-h-[85vh]">
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">{selectedExp.company}</h3>
-                    <h2 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white mt-1 leading-tight tracking-tight">{selectedExp.role}</h2>
+                  {selectedExp.location && (
+                    <div className="hidden md:flex flex-col gap-2 p-3 rounded-xl bg-white dark:bg-slate-800/60 border border-slate-300 dark:border-slate-700 shadow-2xs w-full">
+                      <h4 className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider">Location Details</h4>
+                      <div className="flex items-center gap-2">
+                        <MapPin size={13} className="text-slate-600 dark:text-slate-300 shrink-0" />
+                        <span className="text-xs font-bold text-slate-700 dark:text-slate-300 truncate">{selectedExp.location}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="md:col-span-7 p-6 md:p-8 space-y-6 bg-white dark:bg-slate-900">
+                  <div className="space-y-2">
+                    <h3 className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{selectedExp.company}</h3>
+                    <h2 className="text-xl md:text-2xl font-black text-slate-950 dark:text-white tracking-tight leading-snug">{selectedExp.role}</h2>
                     
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mt-3 text-[10px] text-slate-500 dark:text-slate-400 font-medium border-b border-slate-100 dark:border-slate-900 pb-3">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium border-b border-slate-300 dark:border-slate-700 pb-3">
                       <div className="flex items-center gap-1">
-                        <Calendar size={11} className="text-slate-400" />
+                        <Calendar size={13} className="text-slate-400" />
                         <span>{selectedExp.start_date} - {selectedExp.end_date || "Present"}</span>
                       </div>
                       {selectedExp.duration && (
                         <>
-                          <span className="text-slate-300 dark:text-slate-800">•</span>
+                          <span className="text-slate-300 dark:text-slate-700">•</span>
                           <div className="flex items-center gap-1">
-                            <Clock size={11} className="text-slate-400" />
+                            <Clock size={13} className="text-slate-400" />
                             <span>{selectedExp.duration}</span>
                           </div>
                         </>
                       )}
                       {selectedExp.location && (
                         <>
-                          <span className="text-slate-300 dark:text-slate-800 md:hidden">•</span>
+                          <span className="text-slate-300 dark:text-slate-700 md:hidden">•</span>
                           <div className="flex items-center gap-1 md:hidden">
-                            <MapPin size={11} className="text-slate-400" />
+                            <MapPin size={13} className="text-slate-400" />
                             <span>{selectedExp.location}</span>
                           </div>
                         </>
@@ -364,46 +356,32 @@ export default function ExperienceSection() {
                   </div>
                   
                   {selectedExp.description && (
-                    <p className="text-[11.5px] text-slate-500 dark:text-slate-400 italic leading-relaxed bg-slate-50 dark:bg-slate-900/20 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-900/50">
-                      "{selectedExp.description}"
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800/40 p-3.5 rounded-2xl border border-slate-300 dark:border-slate-700">
+                      {selectedExp.description}
                     </p>
                   )}
 
-                  <div>
-                    <h4 className="text-[8px] font-black uppercase text-slate-400 dark:text-slate-500 mb-2.5 tracking-widest">Key Accomplishments & Responsibilities</h4>
-                    <ul className="space-y-2.5">
+                  <div className="space-y-2.5">
+                    <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Responsibilities</h4>
+                    <ul className="space-y-2">
                       {(Array.isArray(selectedExp.highlights)
                         ? selectedExp.highlights
                         : typeof selectedExp.highlights === 'string'
                         ? selectedExp.highlights.split(',')
                         : []
                       ).map((h: string, i: number) => (
-                        <li key={i} className="text-[11px] text-slate-600 dark:text-slate-400 flex gap-2.5 leading-relaxed">
-                          <span className="text-blue-500 mt-0.5 shrink-0">✦</span> 
-                          <span>{h.trim()}</span>
+                        <li key={i} className="text-xs text-slate-600 dark:text-slate-300 flex gap-2.5 items-start">
+                          <span className="text-slate-950 dark:text-white font-bold text-sm leading-none">•</span> 
+                          <span className="leading-relaxed">{h.trim()}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 </div>
-
-                {selectedExp.tags && selectedExp.tags.length > 0 && (
-                  <div className="pt-4 border-t border-slate-100 dark:border-slate-900 mt-4">
-                    <h4 className="text-[8px] font-black uppercase text-slate-400 dark:text-slate-500 mb-2 tracking-widest">Skills & Tools</h4>
-                    <div className="flex flex-wrap gap-1.5">
-                      {selectedExp.tags.map((tag: string, i: number) => (
-                        <span key={i} className="text-[9px] font-bold px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 transition-colors hover:bg-blue-500/10 hover:text-blue-500">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
+          );
+        })()}
       </AnimatePresence>
     </section>
   );

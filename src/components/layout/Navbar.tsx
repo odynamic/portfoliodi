@@ -38,7 +38,8 @@ export default function Navbar() {
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       className="fixed top-0 left-0 right-0 z-50 w-full h-14 bg-white/70 dark:bg-[#030712]/70 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-800/50 flex items-center"
     >
-      <div className="mx-auto max-w-6xl w-full px-6 flex items-center justify-between">
+      {/* Diubah agar melebar penuh dengan jarak pinggir (padding) konsisten */}
+      <div className="w-full px-6 sm:px-10 lg:px-16 flex items-center justify-between">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="text-xl font-black tracking-[0.18em] text-slate-950 dark:text-white hover:opacity-80 transition-opacity"

@@ -174,41 +174,89 @@ export default function ProjectSection() {
           </motion.div>
         </div>
 
-        {/* CONTENT SWITCHER */}
+{/* CONTENT SWITCHER */}
         <AnimatePresence mode="wait">
           {activeTab === "projects" ? (
             <motion.div 
-              key="carousel" 
+              key="carousel-5" 
               initial={{ opacity: 0, y: 20 }} 
               animate={{ opacity: 1, y: 0 }} 
               exit={{ opacity: 0, y: -20 }} 
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="relative flex flex-col items-center -mt-2"
+              className="relative flex flex-col items-center -mt-2 w-full"
             >
             {/* CAROUSEL CONTAINER */}
-              <div className="flex items-center justify-center h-[410px] sm:h-[430px] w-full max-w-5xl relative overflow-visible px-12 sm:px-16 perspective-[1200px] py-0">
-                {projects.map((project, index) => {
-                  const isCenter = index === currentIndex;
-                  const isLeft = index === (currentIndex - 1 + projects.length) % projects.length;
-                  const isRight = index === (currentIndex + 1) % projects.length;
-                  if (!isCenter && !isLeft && !isRight) return null;
+              <div className="flex items-center justify-center h-[380px] sm:h-[420px] w-full max-w-6xl relative overflow-visible px-16 sm:px-20 perspective-[1200px] py-0">                {projects.map((project, index) => {
+                  // Menghitung jarak relatif kartu dari index aktif (currentIndex)
+                  // Menggunakan modulo agar siklus melingkar (looping) berjalan lancar untuk 5 data atau lebih
+                  const total = projects.length;
+                  let diff = (index - currentIndex + total) % total;
+                  if (diff > total / 2) diff -= total; // Menjadikan rentang dari -2, -1, 0, 1, 2
+
+                  const isCenter = diff === 0;
+                  const isNearLeft = diff === -1;
+                  const isNearRight = diff === 1;
+                  const isFarLeft = diff === -2;
+                  const isFarRight = diff === 2;
+
+                  // Hanya render 5 kartu yang berada di jangkauan terdekat
+                  if (!isCenter && !isNearLeft && !isNearRight && !isFarLeft && !isFarRight) return null;
 
                   const badge = getRoleBadgeStyle(project.role);
 
-return (
+                  // Menentukan nilai animasi berdasarkan posisi kartu
+                  let scaleVal = 1;
+                  let opacityVal = 1;
+                  let xVal = "0%";
+                  let rotateYVal = 0;
+                  let zIndexVal = 30;
+
+                  if (isCenter) {
+                    scaleVal = 1;
+                    opacityVal = 1;
+                    xVal = "0%";
+                    rotateYVal = 0;
+                    zIndexVal = 30;
+                  } else if (isNearLeft) {
+                    scaleVal = 0.85;
+                    opacityVal = 0.65;
+                    xVal = "-72%";
+                    rotateYVal = 6;
+                    zIndexVal = 20;
+                  } else if (isNearRight) {
+                    scaleVal = 0.85;
+                    opacityVal = 0.65;
+                    xVal = "72%";
+                    rotateYVal = -6;
+                    zIndexVal = 20;
+                  } else if (isFarLeft) {
+                    scaleVal = 0.72;
+                    opacityVal = 0.3;
+                    xVal = "-135%";
+                    rotateYVal = 12;
+                    zIndexVal = 10;
+                  } else if (isFarRight) {
+                    scaleVal = 0.72;
+                    opacityVal = 0.3;
+                    xVal = "135%";
+                    rotateYVal = -12;
+                    zIndexVal = 10;
+                  }
+
+                  return (
                     <motion.div
                       key={project.id}
                       layout
-                      style={{ position: isCenter ? "relative" : "absolute" }}
+                      style={{ position: isCenter ? "relative" : "absolute", zIndex: zIndexVal }}
                       drag={isCenter ? "x" : false}
                       dragConstraints={{ left: 0, right: 0 }}
                       onDragEnd={handleDragEnd}
                       animate={{
-                        scale: isCenter ? 1 : 0.85,
-                        opacity: isCenter ? 1 : 0.4,
-                        x: isLeft ? "-95%" : isRight ? "95%" : "0%",
-                        rotateY: isLeft ? 6 : isRight ? -6 : 0,
-                        zIndex: isCenter ? 30 : 10,
+                        scale: scaleVal,
+                        opacity: opacityVal,
+                        x: xVal,
+                        rotateY: rotateYVal,
+                        zIndex: zIndexVal,
                       }}
                       // --- ANIMASI SAAT KURSOR MENYENTUH (HOVER) ---
                       whileHover={isCenter ? { 
@@ -218,14 +266,14 @@ return (
                       } : {}}
                       // -------------------------------------------
                       transition={{ type: "spring", stiffness: 280, damping: 28 }}
-                      className={`w-[290px] sm:w-[320px] rounded-2xl overflow-hidden border-2 bg-white dark:bg-slate-900 flex flex-col transition-shadow duration-300 ${
+                      className={`w-[260px] sm:w-[310px] rounded-2xl overflow-hidden border-2 bg-white dark:bg-slate-900 flex flex-col transition-shadow duration-300 ${
                         isCenter
                           ? "cursor-grab active:cursor-grabbing border-slate-400 dark:border-slate-600 shadow-xl"
                           : "pointer-events-none border-slate-300/50 dark:border-slate-800/50 shadow-none"
                       }`}
                     >
                       {/* GAMBAR PROYEK */}
-                      <div className="w-full h-[195px] sm:h-[210px] overflow-hidden relative bg-slate-200 dark:bg-slate-800 border-b-2 border-slate-400 dark:border-slate-600 flex items-center justify-center shrink-0 select-none pointer-events-none">
+                      <div className="w-full h-[180px] sm:h-[200px] overflow-hidden relative bg-slate-200 dark:bg-slate-800 border-b-2 border-slate-400 dark:border-slate-600 flex items-center justify-center shrink-0 select-none pointer-events-none">
                         {project.image_url ? (
                           <motion.img 
                             whileHover={{ scale: 1.05 }}
@@ -270,8 +318,8 @@ return (
                 })}
               </div>
 
-              {/* NAVIGASI & INDICATORS */}
-              <div className="flex items-center gap-2.5 -mt-3 mb-1">
+{/* NAVIGASI & INDICATORS */}
+              <div className="flex items-center gap-2.5 -mt-9 mb-1">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -303,49 +351,45 @@ return (
                 </motion.button>
               </div>
             </motion.div>
-          ) : (
-       
-           /* TECHNOLOGIES GRID */
-            <motion.div 
-              key="tech" 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col gap-6 w-full max-w-4xl mx-auto mt-5"
-            >
-              {groupedTech.map((section: any, sectionIdx: number) => (
-                <motion.div 
-                  key={section.category}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: sectionIdx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                  className="p-6 rounded-3xl bg-white/90 dark:bg-slate-900/90 border-[2.5px] border-slate-400 dark:border-slate-500 shadow-sm flex flex-col gap-4 backdrop-blur-sm"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="h-1.5 w-4 rounded-full bg-slate-950 dark:bg-white" />
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-900 dark:text-slate-200">{section.category}</h4>
-                  </div>
+          ) : (     
+      
+/* TECHNOLOGIES GRID */
+<motion.div 
+  key="tech" 
+  initial={{ opacity: 0, y: 20 }} 
+  animate={{ opacity: 1, y: 0 }} 
+  exit={{ opacity: 0, y: -20 }}
+  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+  className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl mx-auto mt-7"
+>
+  {["Web Development", "Data Analytics", "UI/UX Design", "Tools"].map((catName) => {
+    const section = groupedTech.find((s: any) => s.category === catName);
+    if (!section) return null;
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-y-3 gap-x-1">
-                    {section.tools.map((tool: any) => (
-                      <motion.div 
-                        key={tool.id} 
-                        whileHover={{ y: -3, scale: 1.02 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                        className="flex flex-col items-center text-center gap-2 group cursor-default bg-transparent border-none shadow-none py-2"
-                      >
-                        <div className="flex items-center justify-center bg-transparent border-none shadow-none p-0">
-                          <img src={tool.img_url} alt={tool.name} className="h-8 w-8 object-contain group-hover:scale-110 transition-transform duration-300" />
-                        </div>
-                        <h5 className="text-[10px] font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">{tool.name}</h5>
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
+    return (
+      <motion.div 
+        key={section.category}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="px-6 py-6 rounded-3xl bg-white/90 dark:bg-slate-900/90 border-[2.5px] border-slate-400 dark:border-slate-500 shadow-sm flex flex-col gap-5 backdrop-blur-sm"
+      >
+        <div className="flex items-center">
+          <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-900 dark:text-slate-200">{section.category}</h4>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-5">
+          {section.tools.map((tool: any) => (
+            <div key={tool.id} className="flex flex-col items-center text-center gap-2 group cursor-default">
+              <img src={tool.img_url} alt={tool.name} className="h-9 w-9 object-contain group-hover:scale-110 transition-transform duration-300" />
+              <h5 className="text-[10px] font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">{tool.name}</h5>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    );
+  })}
+</motion.div>
+                          )}
         </AnimatePresence>
       </motion.div>
 

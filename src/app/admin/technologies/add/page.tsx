@@ -17,9 +17,21 @@ export default function AddTech() {
             <label className="text-xs font-bold text-gray-700 uppercase">Name</label>
             <input name="name" className="w-full border border-gray-200 p-3 rounded-xl" required />
           </div>
+          
           <div className="space-y-1">
             <label className="text-xs font-bold text-gray-700 uppercase">Category</label>
-            <input name="category" placeholder="e.g. Frontend" className="w-full border border-gray-200 p-3 rounded-xl" required />
+            <select 
+              name="category" 
+              className="w-full border border-gray-200 p-3 rounded-xl bg-white text-gray-900 font-medium" 
+              required
+              defaultValue=""
+            >
+              <option value="" disabled>Select category...</option>
+              <option value="Web Development">Web Development</option>
+              <option value="Data Analytics">Data Analytics</option>
+              <option value="UI/UX Design">UI/UX Design</option>
+              <option value="Tools">Tools</option>
+            </select>
           </div>
         </div>
 

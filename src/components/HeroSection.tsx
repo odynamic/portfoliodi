@@ -2,46 +2,147 @@
 
 import React from "react";
 import { motion, Variants } from "framer-motion";
-import { FaGithub, FaLinkedin, FaInstagram, FaCode, FaDatabase, FaServer, FaLaptopCode, FaTerminal, FaCut } from "react-icons/fa";
+import {
+  FaGithub,
+  FaLinkedin,
+  FaInstagram,
+  FaCode,
+  FaDatabase,
+  FaServer,
+  FaLaptopCode,
+  FaChartLine,
+  FaFigma,
+} from "react-icons/fa";
 import { HiOutlineUser, HiArrowRight } from "react-icons/hi";
 
-// Animasi Card Entrance & Hover
+/* =========================
+   Card Animation
+========================= */
+
 const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 16, scale: 0.98 },
+  hidden: {
+    opacity: 0,
+    y: 24,
+    scale: 0.98,
+  },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { type: "spring", stiffness: 260, damping: 20 },
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1],
+    },
   },
   hover: {
     y: -4,
-    transition: { type: "spring", stiffness: 300, damping: 15 },
-  }
+    transition: {
+      type: "spring",
+      stiffness: 250,
+      damping: 18,
+    },
+  },
 };
 
-// Animasi Button Taktil
+/* =========================
+   Stagger Animation
+========================= */
+
+const containerVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.15,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 14,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.45,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+/* =========================
+   Buttons
+========================= */
+
 const buttonVariants: Variants = {
   hover: {
     scale: 1.04,
     y: -2,
-    transition: { type: "spring", stiffness: 400, damping: 12 },
+    transition: {
+      type: "spring",
+      stiffness: 400,
+      damping: 12,
+    },
   },
   tap: {
     scale: 0.93,
     y: 1,
-    transition: { type: "spring", stiffness: 500, damping: 10 },
+    transition: {
+      type: "spring",
+      stiffness: 500,
+      damping: 10,
+    },
   },
 };
 
-// Data Icon Mengambang di Sekitar Container (FaCpu diganti menjadi FaCut)
+/* =========================
+   Floating Icons
+========================= */
+
+const floatingVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.8,
+  },
+  visible: (i: number) => ({
+    opacity: 1,
+    scale: 1,
+    transition: {
+      delay: 0.8 + i * 0.08,
+      duration: 0.45,
+      ease: "easeOut",
+    },
+  }),
+};
+
 const floatingIcons = [
-  { Icon: FaCode, position: "-top-5 left-2 sm:-left-12 sm:top-10" },
-  { Icon: FaDatabase, position: "-top-5 right-2 sm:-right-12 sm:top-14" },
-  { Icon: FaServer, position: "bottom-24 left-2 sm:-left-14 sm:bottom-20" },
-  { Icon: FaLaptopCode, position: "bottom-12 right-2 sm:-right-14 sm:bottom-16" },
-  { Icon: FaTerminal, position: "top-1/2 -left-4 sm:-left-20 -translate-y-1/2 hidden sm:flex" },
-  { Icon: FaCut, position: "top-1/2 -right-4 sm:-right-16 -translate-y-1/2 hidden sm:flex" },
+  {
+    Icon: FaCode,
+    position: "-top-5 left-2 sm:-left-12 sm:top-10",
+  },
+  {
+    Icon: FaDatabase,
+    position: "-top-5 right-2 sm:-right-12 sm:top-14",
+  },
+  {
+    Icon: FaServer,
+    position: "bottom-24 left-2 sm:-left-14 sm:bottom-20",
+  },
+  {
+    Icon: FaLaptopCode,
+    position: "bottom-12 right-2 sm:-right-14 sm:bottom-16",
+  },
+  {
+    Icon: FaChartLine,
+    position: "top-1/2 -left-4 sm:-left-20 -translate-y-1/2 hidden sm:flex",
+  },
+  {
+    Icon: FaFigma,
+    position: "top-1/2 -right-4 sm:-right-16 -translate-y-1/2 hidden sm:flex",
+  },
 ];
 
 export default function Hero() {

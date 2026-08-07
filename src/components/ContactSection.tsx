@@ -85,10 +85,10 @@ export default function ContactSection() {
       >
         
         {/* HEADER SECTION */}
-        <div className="flex flex-col items-center mt-0 mb-12 text-center">
+        <div className="flex flex-col items-center mt-0 mb-10 text-center">
           <motion.h2 
             variants={itemVariants}
-            className="text-2xl sm:text-3xl font-black tracking-[-0.03em] text-slate-950 dark:text-white mb-2"
+            className="text-2xl sm:text-3xl font-black tracking-[-0.03em] text-slate-950 dark:text-white mb-0"
           >
             Start a Conversation
           </motion.h2>

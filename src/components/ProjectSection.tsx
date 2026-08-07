@@ -317,39 +317,38 @@ export default function ProjectSection() {
                   );
                 })}
               </div>
+{/* NAVIGASI & INDICATORS - Tambahkan relative dan z-50 */}
+<div className="flex items-center gap-2.5 -mt-8 relative z-50">
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={prevProject}
+    className="p-1.5 rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 shadow-xs hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 transition-all cursor-pointer"
+  >
+    <ChevronLeft size={15} />
+  </motion.button>
 
-{/* NAVIGASI & INDICATORS */}
-              <div className="flex items-center gap-2.5 -mt-9 mb-1">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={prevProject}
-                  className="p-1.5 rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 shadow-xs hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 transition-all"
-                >
-                  <ChevronLeft size={15} />
-                </motion.button>
+  <div className="flex gap-1.5 items-center px-3 py-1.5 bg-white dark:bg-slate-900 rounded-full border-2 border-slate-300 dark:border-slate-700 shadow-xs">
+    {projects.map((_, i) => (
+      <div
+        key={i}
+        onClick={() => setCurrentIndex(i)}
+        className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+          i === currentIndex ? "w-5 bg-slate-950 dark:bg-white" : "w-1.5 bg-slate-300 dark:border-slate-700 hover:bg-slate-400"
+        }`}
+      />
+    ))}
+  </div>
 
-                <div className="flex gap-1.5 items-center px-3 py-1.5 bg-white dark:bg-slate-900 rounded-full border-2 border-slate-300 dark:border-slate-700 shadow-xs">
-                  {projects.map((_, i) => (
-                    <div
-                      key={i}
-                      onClick={() => setCurrentIndex(i)}
-                      className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                        i === currentIndex ? "w-5 bg-slate-950 dark:bg-white" : "w-1.5 bg-slate-300 dark:border-slate-700 hover:bg-slate-400"
-                      }`}
-                    />
-                  ))}
-                </div>
-
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={nextProject}
-                  className="p-1.5 rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 shadow-xs hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 transition-all"
-                >
-                  <ChevronRight size={15} />
-                </motion.button>
-              </div>
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={nextProject}
+    className="p-1.5 rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 shadow-xs hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 transition-all cursor-pointer"
+  >
+    <ChevronRight size={15} />
+  </motion.button>
+</div>
             </motion.div>
           ) : (     
       

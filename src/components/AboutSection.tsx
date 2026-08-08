@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, Variants } from "framer-motion";
 import { Download, ArrowRight, GraduationCap, Layout, LineChart, Code2 } from "lucide-react";
 
-// Variants untuk tombol
+// button animation variants
 const buttonVariants: Variants = {
   hover: {
     scale: 1.03,
@@ -19,7 +19,7 @@ const buttonVariants: Variants = {
   },
 };
 
-// Variants untuk container 3 kotak spesialisasi (Stagger Animation)
+// container stagger variants
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {
@@ -31,7 +31,7 @@ const containerVariants: Variants = {
   },
 };
 
-// Variants untuk item individual di spesialisasi
+// item stagger variants
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: 16, scale: 0.96 },
   show: { 
@@ -57,7 +57,7 @@ export default function About({ projects = [] }: AboutProps) {
   const specializations = [
     {
       icon: <Code2 size={18} />,
-      title: "Full-Stack Development",
+      title: "Web Development",
     },
     {
       icon: <LineChart size={18} />,
@@ -74,7 +74,7 @@ export default function About({ projects = [] }: AboutProps) {
       id="about" 
       className="relative w-full pt-10 pb-8 md:pt-14 md:pb-10 scroll-mt-24 bg-slate-100/90 dark:bg-slate-950 transition-colors duration-500 overflow-hidden font-sans selection:bg-slate-200"
     >
-      {/* BACKGROUND GRID */}
+      {/* background grid */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-70 dark:opacity-30"
         style={{
@@ -85,13 +85,14 @@ export default function About({ projects = [] }: AboutProps) {
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 relative z-10">
         
-        {/* MAIN LAYOUT GRID */}
+        {/* main layout grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-x-8 gap-y-5 items-stretch">
           
-          {/* SISI KIRI: Header, Foto, Kampus */}
+          {/* left column */}
           <div className="md:col-span-5 flex flex-col justify-between gap-4">
             <div className="space-y-4">
-              {/* Judul Utama */}
+              
+              {/* section header */}
               <div className="space-y-1.5 w-full">
                 <motion.h2 
                   {...fadeInUp}
@@ -109,7 +110,7 @@ export default function About({ projects = [] }: AboutProps) {
                 />
               </div>
 
-              {/* GAMBAR PROFIL (Hover Zoom & Floating Effect) */}
+              {/* profile image */}
               <motion.div 
                 {...fadeInUp}
                 whileHover={{ y: -4, scale: 1.01 }}
@@ -125,37 +126,36 @@ export default function About({ projects = [] }: AboutProps) {
               </motion.div>
             </div>
 
-            {/* ELEMEN KAMPUS (Hover Bounce & Icon Pulse) */}
-{/* ELEMEN KAMPUS (Hover Bounce & Icon Pulse) */}
-<motion.div 
-  {...fadeInUp}
-  whileHover={{ y: -3, scale: 1.01 }}
-  transition={{ type: "spring", stiffness: 400, damping: 15 }}
-  className="flex items-center gap-3 p-3.5 w-full rounded-2xl border-2 border-slate-400 dark:border-slate-600 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 group cursor-default"
->
-  <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-600 group-hover:bg-slate-950 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-slate-950 transition-colors duration-300">
-    <motion.div
-      animate={{ y: [0, -2, 0] }}
-      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-    >
-      <GraduationCap size={18} />
-    </motion.div>
-  </div>
-  <div className="space-y-0.5">
-    <p className="text-xs font-black tracking-wider text-slate-900 dark:text-slate-200">
-      Informatics
-    </p>
-    <p className="text-xs font-semibold text-slate-600 dark:text-slate-400">
-      Jenderal Soedirman University
-    </p>
-  </div>
-</motion.div>
+            {/* education card */}
+            <motion.div 
+              {...fadeInUp}
+              whileHover={{ y: -3, scale: 1.01 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className="flex items-center gap-3 p-3.5 w-full rounded-2xl border-2 border-slate-400 dark:border-slate-600 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 group cursor-default"
+            >
+              <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 border border-slate-300 dark:border-slate-600 group-hover:bg-slate-950 group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-slate-950 transition-colors duration-300">
+                <motion.div
+                  animate={{ y: [0, -2, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <GraduationCap size={18} />
+                </motion.div>
+              </div>
+              <div className="space-y-0.5">
+                <p className="text-xs font-black tracking-wider text-slate-900 dark:text-slate-200">
+                  Informatics
+                </p>
+                <p className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+                  Jenderal Soedirman University
+                </p>
+              </div>
+            </motion.div>
           </div>
 
-          {/* SISI KANAN: 3 Kotak Spesialisasi -> Kotak Profil -> Buttons */}
+          {/* right column */}
           <div className="md:col-span-7 flex flex-col justify-between gap-4">
             
-            {/* 1. 3 KOTAK SPESIALISASI (STAGGERED ENTER + HOVER LIFT) */}
+            {/* specialization cards */}
             <motion.div 
               variants={containerVariants}
               initial="hidden"
@@ -188,7 +188,7 @@ export default function About({ projects = [] }: AboutProps) {
               ))}
             </motion.div>
 
-            {/* 2. KOTAK NAMA & PARAGRAF (ELEVATION ON HOVER) */}
+            {/* biography box */}
             <motion.div 
               {...fadeInUp}
               whileHover={{ y: -2 }}
@@ -201,19 +201,20 @@ export default function About({ projects = [] }: AboutProps) {
 
               <div className="mt-4 space-y-3.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
                 <p>
-                  I focus on delivering complete technology solutions by connecting full-stack web development, user interface design, and data analytics. My work spans the entire digital product cycle, from designing intuitive wireframes in UI/UX tools to building responsive frontend interfaces and managing database workflows that power practical web applications.
+                  I believe data only reaches its full potential when it powers interactive, practical systems. As a data-driven web developer, I bridge engineering, design, and analytics to build web applications that go beyond aesthetics and actively guide strategic decisions.
                 </p>
                 <p>
-                  Alongside software engineering, I apply data analytics to extract meaningful operational insights and translate them into clear visual dashboards. By combining technical full-stack capabilities with analytical problem-solving, I aim to build reliable digital systems that streamline complex tasks and support sound strategic decisions.
+                  FFrom building intuitive interfaces and structuring database workflows to shipping data-backed dashboards, I ensure every digital product is rooted in solid logic and measurable results. By combining technical execution with user-centric design, I deliver reliable solutions that solve real business problems.
                 </p>
               </div>
             </motion.div>
 
-            {/* 3. BUTTONS (SPRING HOVER) */}
+            {/* action buttons */}
             <motion.div 
               {...fadeInUp}
-              className="flex flex-wrap items-center gap-3 pt-1"
+              className="flex flex-row items-center gap-3 pt-1 w-full"
             >
+              {/* Tombol 1: View CV */}
               <motion.a 
                 href="https://drive.google.com/file/d/1hC67zOxAIbAgidDYOYCfrSQCI9QP52ua/view?usp=sharing" 
                 target="_blank" 
@@ -221,22 +222,22 @@ export default function About({ projects = [] }: AboutProps) {
                 variants={buttonVariants}
                 whileHover="hover"
                 whileTap="tap"
-                className="flex items-center justify-center gap-2 bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 px-6 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider shadow-md transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider shadow-md transition-colors"
               >
-                Download CV <Download size={15} />
+                View CV <ArrowRight size={15} />
               </motion.a>
               
+              {/* Tombol 2: View Projects */}
               <motion.a 
                 href="#projects" 
                 variants={buttonVariants}
                 whileHover="hover"
                 whileTap="tap"
-                className="flex items-center justify-center gap-2 border-2 border-slate-300 dark:border-slate-700 bg-white/90 dark:bg-slate-900/90 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-100 px-6 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider shadow-sm transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 border-2 border-slate-300 dark:border-slate-700 bg-white/90 dark:bg-slate-900/90 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-100 py-3.5 rounded-2xl font-bold text-xs uppercase tracking-wider shadow-sm transition-colors"
               >
                 View Projects <ArrowRight size={15} />
               </motion.a>
             </motion.div>
-
           </div>
 
         </div>

@@ -15,10 +15,7 @@ import {
 } from "react-icons/fa";
 import { HiOutlineUser, HiArrowRight } from "react-icons/hi";
 
-/* =========================
-   Card Animation
-========================= */
-
+// card animation variants
 const cardVariants: Variants = {
   hidden: {
     opacity: 0,
@@ -44,10 +41,7 @@ const cardVariants: Variants = {
   },
 };
 
-/* =========================
-   Stagger Animation
-========================= */
-
+// container stagger variants
 const containerVariants: Variants = {
   hidden: {},
   visible: {
@@ -73,10 +67,7 @@ const itemVariants: Variants = {
   },
 };
 
-/* =========================
-   Buttons
-========================= */
-
+// button animation variants
 const buttonVariants: Variants = {
   hover: {
     scale: 1.04,
@@ -98,26 +89,7 @@ const buttonVariants: Variants = {
   },
 };
 
-/* =========================
-   Floating Icons
-========================= */
-
-const floatingVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    scale: 0.8,
-  },
-  visible: (i: number) => ({
-    opacity: 1,
-    scale: 1,
-    transition: {
-      delay: 0.8 + i * 0.08,
-      duration: 0.45,
-      ease: "easeOut",
-    },
-  }),
-};
-
+// floating icons configuration
 const floatingIcons = [
   {
     Icon: FaCode,
@@ -149,7 +121,7 @@ export default function Hero() {
   return (
     <section className="relative w-full flex items-center justify-center pt-20 sm:pt-24 pb-8 sm:pb-12 px-4 sm:px-12 overflow-hidden bg-slate-100/90 dark:bg-slate-950 font-sans selection:bg-slate-200">
       
-      {/* 1. BACKGROUND GRID */}
+      {/* background grid */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-70 dark:opacity-30"
         style={{
@@ -158,7 +130,7 @@ export default function Hero() {
         }}
       />
 
-      {/* 2. CARD CONTAINER WIDE */}
+      {/* card container */}
       <motion.div 
         variants={cardVariants}
         initial="hidden"
@@ -167,7 +139,7 @@ export default function Hero() {
         className="relative mx-3 sm:mx-auto max-w-3xl w-full z-10"
       >
         
-        {/* ELEMEN ICON DI SEKITAR CONTAINER */}
+        {/* floating icons */}
         {floatingIcons.map((item, idx) => (
           <motion.div
             key={idx}
@@ -196,10 +168,10 @@ export default function Hero() {
           </motion.div>
         ))}
 
-        {/* KOTAK CONTAINER */}
+        {/* main content box */}
         <div className="bg-white dark:bg-slate-900 border-2 border-slate-400 dark:border-slate-600 ring-1 ring-slate-900/10 dark:ring-white/10 rounded-3xl p-6 sm:p-12 shadow-lg flex flex-col items-center text-center">
           
-          {/* Status Badge */}
+          {/* status badge */}
           <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 px-3.5 py-1 text-[10px] sm:text-[11px] font-extrabold tracking-wider uppercase text-slate-800 dark:text-slate-200 mb-6 sm:mb-8">
             <span className="relative flex h-2 w-2 sm:h-2.5 sm:w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -208,29 +180,29 @@ export default function Hero() {
             AVAILABLE FOR WORK
           </div>
 
-          {/* Typography Nama */}
+          {/* name */}
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-slate-950 dark:text-white tracking-[-0.03em] leading-[1.1]">
             Dyah Ghaniya Putri
           </h1>
 
-          {/* Title: Software Developer */}
+          {/* title */}
           <p className="mt-6 sm:mt-8 text-[11px] sm:text-sm font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-slate-700 dark:text-slate-300 mb-3 sm:mb-4">
-            Software Developer
+            Data-Driven Web Developer
           </p>
           
-          {/* Copywriting */}
+          {/* copywriting */}
           <p className="text-sm sm:text-lg font-medium text-slate-600 dark:text-slate-300 max-w-xl leading-relaxed mb-6 sm:mb-8">
-            Building business applications that simplify operations and empower decisions.
+            Bridging web development and analytics to design functional systems powered by data insights.
           </p>
 
-          {/* Garis Pemisah Samar Pertama */}
+          {/* divider */}
           <div className="w-full h-[1px] bg-slate-200 dark:bg-slate-800 mb-6 sm:mb-8" />
 
-          {/* Tombol-Tombol, Garis Pemisah, & Socials */}
+          {/* actions and socials */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
             
             <div className="flex items-center gap-2.5 sm:gap-3 w-full sm:w-auto justify-center">
-              {/* Primary Button */}
+              {/* primary button */}
               <motion.a 
                 href="#about" 
                 variants={buttonVariants}
@@ -241,7 +213,7 @@ export default function Hero() {
                 About Me <HiOutlineUser size={15} />
               </motion.a>
               
-              {/* Secondary Button */}
+              {/* secondary button */}
               <motion.a 
                 href="#contact" 
                 variants={buttonVariants}
@@ -253,11 +225,11 @@ export default function Hero() {
               </motion.a>
             </div>
 
-            {/* Garis Pemisah */}
+            {/* divider */}
             <div className="hidden sm:block w-[1px] h-8 bg-slate-300 dark:bg-slate-700 mx-2" />
             <div className="block sm:hidden w-16 h-[1px] bg-slate-200 dark:bg-slate-800 my-1" />
 
-            {/* Social Icons */}
+            {/* social links */}
             <div className="flex items-center gap-2 mt-1 sm:mt-0">
               {[
                 { Icon: FaGithub, href: "https://github.com/odynamic" },

@@ -6,7 +6,6 @@ import { FaInstagram, FaLinkedin, FaGithub, FaMapMarkerAlt, FaEnvelope } from "r
 import { FiArrowUpRight as ArrowIcon } from "react-icons/fi";
 import { IoSend } from "react-icons/io5";
 
-// Variant untuk container agar anak-anaknya muncul bertahap dengan lebih halus dan lembut
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -18,22 +17,28 @@ const containerVariants: Variants = {
   },
 };
 
-// Variant elemen dengan pergerakan yang lebih lambat dan "soft"
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }, // Menggunakan ease-out kustom yang sangat halus
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
   },
 };
+
+const SOCIAL_LINKS = [
+  { label: "Instagram", icon: <FaInstagram size={15} />, link: "https://instagram.com/dyahgputri" },
+  { label: "LinkedIn", icon: <FaLinkedin size={15} />, link: "https://linkedin.com" },
+  { label: "GitHub", icon: <FaGithub size={15} />, link: "https://github.com/dynamic" },
+  { label: "Email", icon: <FaEnvelope size={15} />, link: "mailto:ghaniyaputridyah@gmail.com" },
+];
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
-    message: ""
+    message: "",
   });
 
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -59,23 +64,26 @@ export default function ContactSection() {
       } else {
         setStatus("error");
       }
-    } catch (error) {
+    } catch {
       setStatus("error");
     }
   };
 
   return (
-    <section id="contact" className="relative w-full pt-10 pb-10 md:pt-14 md:pb-14 bg-slate-100/90 dark:bg-slate-950 transition-colors duration-500 overflow-hidden font-sans selection:bg-slate-200 scroll-mt-24">
-      {/* BACKGROUND GRID */}
+    <section 
+      id="contact" 
+      className="relative w-full pt-10 pb-10 md:pt-14 md:pb-14 bg-slate-100/90 dark:bg-slate-950 transition-colors duration-500 overflow-hidden font-sans selection:bg-slate-200 scroll-mt-24"
+    >
+      {/* Background grid */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-70 dark:opacity-30"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='28' height='28' viewBox='0 0 28 28' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h28v28H0z' fill='none'/%3E%3Cpath d='M28 0v28H0' fill='none' stroke='%2394a3b8' stroke-width='1.2'/%3E%3C/svg%3E")`,
-          backgroundSize: '28px 28px'
+          backgroundSize: '28px 28px',
         }}
       />
 
-      {/* Main Container dengan Motion Viewport Stagger yang Lebih Smooth */}
+      {/* Main container */}
       <motion.div 
         variants={containerVariants}
         initial="hidden"
@@ -83,8 +91,7 @@ export default function ContactSection() {
         viewport={{ once: true, margin: "-80px" }}
         className="mx-auto max-w-4xl px-6 sm:px-8 relative z-10"
       >
-        
-        {/* HEADER SECTION */}
+        {/* Header */}
         <div className="flex flex-col items-center mt-0 mb-10 text-center">
           <motion.h2 
             variants={itemVariants}
@@ -105,19 +112,15 @@ export default function ContactSection() {
         </div>
 
         <div className="grid md:grid-cols-12 gap-4 items-stretch">
-          
-          {/* KOLOM KIRI: Connect Platforms & Location (Icon Ke Bawah) */}
+          {/* Left column */}
           <motion.div variants={itemVariants} className="md:col-span-5 flex flex-col">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 px-1 mb-2.5">Connect Platforms</h4>
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 px-1 mb-2.5">
+              Connect Platforms
+            </h4>
             
             <div className="flex-1 flex flex-col justify-between space-y-2.5">
               <div className="flex flex-col space-y-2.5">
-                {[
-                  { label: "Instagram", icon: <FaInstagram size={15} />, link: "https://instagram.com/dyahgputri" },
-                  { label: "LinkedIn", icon: <FaLinkedin size={15} />, link: "https://linkedin.com" },
-                  { label: "GitHub", icon: <FaGithub size={15} />, link: "https://github.com/dynamic" },
-                  { label: "Email", icon: <FaEnvelope size={15} />, link: "mailto:ghaniyaputridyah@gmail.com" },
-                ].map((item) => (
+                {SOCIAL_LINKS.map((item) => (
                   <a 
                     key={item.label} 
                     href={item.link} 
@@ -155,9 +158,11 @@ export default function ContactSection() {
             </div>
           </motion.div>
 
-          {/* KOLOM KANAN: Send a Message Form */}
+          {/* Right column */}
           <motion.div variants={itemVariants} className="md:col-span-7 flex flex-col -mt-2 md:mt-0">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 px-1 mb-2.5">Send a Message</h4>
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 px-1 mb-2.5">
+              Send a Message
+            </h4>
 
             <form onSubmit={handleSubmit} className="flex-1 flex flex-col justify-between space-y-3">
               <div className="grid md:grid-cols-2 gap-3">
@@ -199,13 +204,17 @@ export default function ContactSection() {
                 placeholder="Your message..." 
                 required
                 className="w-full flex-1 px-4 py-3.5 text-xs rounded-2xl bg-white dark:bg-slate-900 border-[1.5px] border-slate-400 dark:border-slate-600 text-slate-950 dark:text-white outline-none focus:border-slate-950 dark:focus:border-white shadow-xs transition-all placeholder:text-slate-400 dark:placeholder:text-slate-500 resize-none font-medium"
-              ></textarea>
+              />
               
               {status === "success" && (
-                <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold tracking-wide px-1">✓ Message sent successfully!</p>
+                <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold tracking-wide px-1">
+                  ✓ Message sent successfully!
+                </p>
               )}
               {status === "error" && (
-                <p className="text-[11px] text-rose-600 dark:text-rose-400 font-bold tracking-wide px-1">✕ Failed to send. Please try again.</p>
+                <p className="text-[11px] text-rose-600 dark:text-rose-400 font-bold tracking-wide px-1">
+                  ✕ Failed to send. Please try again.
+                </p>
               )}
 
               <button 
@@ -218,7 +227,6 @@ export default function ContactSection() {
               </button>
             </form>
           </motion.div>
-
         </div>
       </motion.div>
     </section>

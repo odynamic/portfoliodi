@@ -8,7 +8,6 @@ export function Sidebar() {
   const pathname = useNavPathname();
   const [mounted, setMounted] = useState(false);
 
-  // Teknik ini memastikan code hanya jalan di browser
   useEffect(() => {
     setMounted(true);
   }, []);

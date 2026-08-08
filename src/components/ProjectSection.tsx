@@ -98,7 +98,7 @@ export default function ProjectSection() {
       id="projects"
       className="relative w-full pt-3 pb-6 md:pt-4 md:pb-8 bg-slate-100/90 dark:bg-slate-950 transition-colors duration-500 overflow-hidden font-sans selection:bg-slate-200 scroll-mt-24"
     >
-      {/* BACKGROUND GRID */}
+      {/* Background Grid */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-70 dark:opacity-30"
         style={{
@@ -107,7 +107,6 @@ export default function ProjectSection() {
         }}
       />
 
-      {/* Main Container dengan Motion Viewport Stagger yang Sangat Lembut */}
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -115,8 +114,7 @@ export default function ProjectSection() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="mx-auto max-w-6xl px-6 sm:px-8 relative z-10"
       >
-        
-        {/* HEADER SECTION & PISTON-STYLE TAB SWITCHER */}
+        {/* Header & Tabs */}
         <div className="flex flex-col items-center mt-2 mb-2 text-center">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
@@ -174,7 +172,7 @@ export default function ProjectSection() {
           </motion.div>
         </div>
 
-{/* CONTENT SWITCHER */}
+        {/* Content Switcher */}
         <AnimatePresence mode="wait">
           {activeTab === "projects" ? (
             <motion.div 
@@ -185,13 +183,12 @@ export default function ProjectSection() {
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               className="relative flex flex-col items-center -mt-2 w-full"
             >
-            {/* CAROUSEL CONTAINER */}
-              <div className="flex items-center justify-center h-[380px] sm:h-[420px] w-full max-w-6xl relative overflow-visible px-16 sm:px-20 perspective-[1200px] py-0">                {projects.map((project, index) => {
-                  // Menghitung jarak relatif kartu dari index aktif (currentIndex)
-                  // Menggunakan modulo agar siklus melingkar (looping) berjalan lancar untuk 5 data atau lebih
+              {/* Carousel Container */}
+              <div className="flex items-center justify-center h-[380px] sm:h-[420px] w-full max-w-6xl relative overflow-visible px-16 sm:px-20 perspective-[1200px] py-0">               
+                {projects.map((project, index) => {
                   const total = projects.length;
                   let diff = (index - currentIndex + total) % total;
-                  if (diff > total / 2) diff -= total; // Menjadikan rentang dari -2, -1, 0, 1, 2
+                  if (diff > total / 2) diff -= total;
 
                   const isCenter = diff === 0;
                   const isNearLeft = diff === -1;
@@ -199,12 +196,10 @@ export default function ProjectSection() {
                   const isFarLeft = diff === -2;
                   const isFarRight = diff === 2;
 
-                  // Hanya render 5 kartu yang berada di jangkauan terdekat
                   if (!isCenter && !isNearLeft && !isNearRight && !isFarLeft && !isFarRight) return null;
 
                   const badge = getRoleBadgeStyle(project.role);
 
-                  // Menentukan nilai animasi berdasarkan posisi kartu
                   let scaleVal = 1;
                   let opacityVal = 1;
                   let xVal = "0%";
@@ -258,13 +253,11 @@ export default function ProjectSection() {
                         rotateY: rotateYVal,
                         zIndex: zIndexVal,
                       }}
-                      // --- ANIMASI SAAT KURSOR MENYENTUH (HOVER) ---
                       whileHover={isCenter ? { 
                         scale: 1.03, 
                         y: -8,
                         transition: { type: "spring", stiffness: 400, damping: 15 }
                       } : {}}
-                      // -------------------------------------------
                       transition={{ type: "spring", stiffness: 280, damping: 28 }}
                       className={`w-[260px] sm:w-[310px] rounded-2xl overflow-hidden border-2 bg-white dark:bg-slate-900 flex flex-col transition-shadow duration-300 ${
                         isCenter
@@ -272,7 +265,7 @@ export default function ProjectSection() {
                           : "pointer-events-none border-slate-300/50 dark:border-slate-800/50 shadow-none"
                       }`}
                     >
-                      {/* GAMBAR PROYEK */}
+                      {/* Project Image */}
                       <div className="w-full h-[180px] sm:h-[200px] overflow-hidden relative bg-slate-200 dark:bg-slate-800 border-b-2 border-slate-400 dark:border-slate-600 flex items-center justify-center shrink-0 select-none pointer-events-none">
                         {project.image_url ? (
                           <motion.img 
@@ -287,7 +280,7 @@ export default function ProjectSection() {
                         )}
                       </div>
 
-                      {/* KONTEN */}
+                      {/* Card Content */}
                       <div className="p-3.5 flex flex-col gap-2.5 bg-white dark:bg-slate-900">
                         <div className="space-y-1">
                           {project.role && (
@@ -317,82 +310,82 @@ export default function ProjectSection() {
                   );
                 })}
               </div>
-{/* NAVIGASI & INDICATORS - Tambahkan relative dan z-50 */}
-<div className="flex items-center gap-2.5 -mt-8 relative z-50">
-  <motion.button
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    onClick={prevProject}
-    className="p-1.5 rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 shadow-xs hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 transition-all cursor-pointer"
-  >
-    <ChevronLeft size={15} />
-  </motion.button>
 
-  <div className="flex gap-1.5 items-center px-3 py-1.5 bg-white dark:bg-slate-900 rounded-full border-2 border-slate-300 dark:border-slate-700 shadow-xs">
-    {projects.map((_, i) => (
-      <div
-        key={i}
-        onClick={() => setCurrentIndex(i)}
-        className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-          i === currentIndex ? "w-5 bg-slate-950 dark:bg-white" : "w-1.5 bg-slate-300 dark:border-slate-700 hover:bg-slate-400"
-        }`}
-      />
-    ))}
-  </div>
+              {/* Navigation & Indicators */}
+              <div className="flex items-center gap-2.5 -mt-8 relative z-50">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={prevProject}
+                  className="p-1.5 rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 shadow-xs hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 transition-all cursor-pointer"
+                >
+                  <ChevronLeft size={15} />
+                </motion.button>
 
-  <motion.button
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    onClick={nextProject}
-    className="p-1.5 rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 shadow-xs hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 transition-all cursor-pointer"
-  >
-    <ChevronRight size={15} />
-  </motion.button>
-</div>
+                <div className="flex gap-1.5 items-center px-3 py-1.5 bg-white dark:bg-slate-900 rounded-full border-2 border-slate-300 dark:border-slate-700 shadow-xs">
+                  {projects.map((_, i) => (
+                    <div
+                      key={i}
+                      onClick={() => setCurrentIndex(i)}
+                      className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                        i === currentIndex ? "w-5 bg-slate-950 dark:bg-white" : "w-1.5 bg-slate-300 dark:border-slate-700 hover:bg-slate-400"
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={nextProject}
+                  className="p-1.5 rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 shadow-xs hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 transition-all cursor-pointer"
+                >
+                  <ChevronRight size={15} />
+                </motion.button>
+              </div>
             </motion.div>
-          ) : (     
-      
-/* TECHNOLOGIES GRID */
-<motion.div 
-  key="tech" 
-  initial={{ opacity: 0, y: 20 }} 
-  animate={{ opacity: 1, y: 0 }} 
-  exit={{ opacity: 0, y: -20 }}
-  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-  className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl mx-auto mt-7"
->
-  {["Web Development", "Data Analytics", "UI/UX Design", "Tools"].map((catName) => {
-    const section = groupedTech.find((s: any) => s.category === catName);
-    if (!section) return null;
+          ) : ( 
+            /* Technologies Grid */
+            <motion.div 
+              key="tech" 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl mx-auto mt-7"
+            >
+              {["Web Development", "Data Analytics", "UI/UX Design", "Tools"].map((catName) => {
+                const section = groupedTech.find((s: any) => s.category === catName);
+                if (!section) return null;
 
-    return (
-      <motion.div 
-        key={section.category}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="px-6 py-6 rounded-3xl bg-white/90 dark:bg-slate-900/90 border-[2.5px] border-slate-400 dark:border-slate-500 shadow-sm flex flex-col gap-5 backdrop-blur-sm"
-      >
-        <div className="flex items-center">
-          <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-900 dark:text-slate-200">{section.category}</h4>
-        </div>
+                return (
+                  <motion.div 
+                    key={section.category}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="px-6 py-6 rounded-3xl bg-white/90 dark:bg-slate-900/90 border-[2.5px] border-slate-400 dark:border-slate-500 shadow-sm flex flex-col gap-5 backdrop-blur-sm"
+                  >
+                    <div className="flex items-center">
+                      <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-900 dark:text-slate-200">{section.category}</h4>
+                    </div>
 
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-5">
-          {section.tools.map((tool: any) => (
-            <div key={tool.id} className="flex flex-col items-center text-center gap-2 group cursor-default">
-              <img src={tool.img_url} alt={tool.name} className="h-9 w-9 object-contain group-hover:scale-110 transition-transform duration-300" />
-              <h5 className="text-[10px] font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">{tool.name}</h5>
-            </div>
-          ))}
-        </div>
-      </motion.div>
-    );
-  })}
-</motion.div>
-                          )}
+                    <div className="flex flex-wrap items-center gap-x-6 gap-y-5">
+                      {section.tools.map((tool: any) => (
+                        <div key={tool.id} className="flex flex-col items-center text-center gap-2 group cursor-default">
+                          <img src={tool.img_url} alt={tool.name} className="h-9 w-9 object-contain group-hover:scale-110 transition-transform duration-300" />
+                          <h5 className="text-[10px] font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">{tool.name}</h5>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          )}
         </AnimatePresence>
       </motion.div>
 
-      {/* MODAL DETAIL PROYEK DENGAN ANIMASI HALUS */}
+      {/* Project Detail Modal */}
       <AnimatePresence>
         {selectedProject && (
           <motion.div

@@ -97,7 +97,6 @@ export default function EditExperienceForm({ exp, id }: { exp: any; id: string }
           
           <ImageUploader onUpload={handleAddGalleryImage} />
           
-          {/* PERUBAHAN UTAMA: name disesuaikan dengan kolom Supabase "documentation_images" */}
           <input type="hidden" name="documentation_images" value={JSON.stringify(galleryUrls)} />
 
           {galleryUrls.length > 0 && (

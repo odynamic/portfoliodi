@@ -24,7 +24,7 @@ export default function Footer() {
 
   return (
     <footer className="w-full py-5 bg-[#F4F4F5] dark:bg-slate-950 border-t-[1.5px] border-slate-300 dark:border-slate-800 transition-colors duration-500">
-      {/* Diubah agar melebar penuh dengan jarak pinggir (padding) konsisten */}
+
       <div className="w-full px-6 sm:px-10 lg:px-16 flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">
         
         <p>© {currentYear} DGP. All rights reserved.</p>

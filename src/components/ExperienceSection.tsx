@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Calendar, Briefcase, Users, Layers, ArrowUpRight, ChevronDown, ChevronUp, MapPin, Clock } from "lucide-react";
+import { X, Calendar, ArrowUpRight, ChevronDown, ChevronUp, MapPin, Clock } from "lucide-react";
 import { usePortfolioData } from "../hooks/usePortfolioData";
 
 export default function ExperienceSection() {
@@ -25,7 +25,7 @@ export default function ExperienceSection() {
           }
           return exp.type === activeExpTab;
         })
-.sort((a: any, b: any) => {
+        .sort((a: any, b: any) => {
           const getCategoryWeight = (type: string) => {
             const t = (type || "").toLowerCase();
             if (t.includes('full-time') || t.includes('fulltime') || t.includes('work')) return 0;
@@ -43,23 +43,15 @@ export default function ExperienceSection() {
             return weightA - weightB;
           }
 
-          // Aturan khusus untuk urutan Role/Jabatan (Coordinator -> Mentor -> Staff)
           const getRoleWeight = (roleName: string) => {
             const name = (roleName || "").toLowerCase();
             
-            // 1. Paling atas: Pimpinan/Ketua
             if (name.includes('manager') || name.includes('chairman') || name.includes('ketua') || name.includes('leader')) return 0; 
-            
-            // 2. Kedua: Coordinator
             if (name.includes('coordinator') || name.includes('coor') || name.includes('koordinator')) return 1; 
-            
-            // 3. Ketiga: Mentor / Student Mentor
             if (name.includes('mentor') || name.includes('mentee') || name.includes('pendamping')) return 2; 
-            
-            // 4. Terakhir: Staff / Anggota
             if (name.includes('staff') || name.includes('staf') || name.includes('member') || name.includes('anggota')) return 3; 
             
-            return 4; // Default untuk role lain
+            return 4;
           };
 
           const roleWeightA = getRoleWeight(a.role);
@@ -69,7 +61,6 @@ export default function ExperienceSection() {
             return roleWeightA - roleWeightB; 
           }
 
-          // Jika tipe dan jabatannya sama, urutkan berdasarkan tanggal terbaru (Format YYYY-MM / YYYY-MM-DD)
           const getDateValue = (dateStr: string) => {
             if (!dateStr) return 0;
             const clean = dateStr.replace(/[^0-9]/g, ""); 
@@ -99,7 +90,7 @@ export default function ExperienceSection() {
     <section 
       id="experience" 
       className="relative w-full pt-3 pb-6 md:pt-3 md:pb-8 bg-slate-100/90 dark:bg-slate-950 transition-colors duration-500 overflow-hidden font-sans selection:bg-slate-200 scroll-mt-24"
-    >       
+    >      
       {/* BACKGROUND GRID */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-70 dark:opacity-30"
@@ -133,7 +124,7 @@ export default function ExperienceSection() {
             />
           </div>
 
-          <div className="inline-flex items-center p-1 bg-slate-200/80 dark:bg-slate-900/90 backdrop-blur-md rounded-full border border-slate-300 dark:border-slate-800 shadow-inner mt-2">            {[
+          <div className="inline-flex items-center p-1 bg-slate-200/80 dark:bg-slate-900/90 backdrop-blur-md rounded-full border border-slate-300 dark:border-slate-800 shadow-inner mt-2">           {[
               { id: "All", label: "All" },
               { id: "Industry", label: "Industry" },
               { id: "Community", label: "Community" }
@@ -169,7 +160,7 @@ export default function ExperienceSection() {
         </div>
 
         <div className="relative space-y-4 pt-1 min-h-0 mt-3">
-          <div className="absolute left-[3.5px] md:left-1/2 w-[4px] h-full bg-slate-300 dark:bg-slate-800 md:-translate-x-1/2 z-0" />        
+          <div className="absolute left-[3.5px] md:left-1/2 w-[4px] h-full bg-slate-300 dark:bg-slate-800 md:-translate-x-1/2 z-0" />       
           <AnimatePresence mode="popLayout">
           {displayedExperiences.map((exp: any, idx: number) => {
             const badgeType = exp.type;
@@ -202,16 +193,14 @@ export default function ExperienceSection() {
                       transition={{ type: "spring", stiffness: 400, damping: 15 }}
                       className="p-4 rounded-3xl bg-white dark:bg-slate-900 border-2 border-slate-400 dark:border-slate-600 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-all duration-300 relative overflow-hidden flex flex-col justify-between"
                     >
-                      {/* Konten Kartu dengan Logo Persegi */}
                       <div className={`w-full flex items-start gap-3.5 ${idx % 2 === 0 ? "md:flex-row-reverse md:text-right" : "md:flex-row md:text-left"}`}>
-{/* Logo Perusahaan Persegi (Diperbesar Sejajar Blok Teks) */}
-<div className="h-24 aspect-square shrink-0 rounded-3xl overflow-hidden border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-lg flex items-center justify-center p-1.5 mt-0.5">
-  <img 
-    src={exp.image_url || "/placeholder.jpg"} 
-    alt={exp.company} 
-    className="w-full h-full object-contain" // Menggunakan object-contain agar logo tidak terpotong
-  />
-</div>
+                        <div className="h-24 aspect-square shrink-0 rounded-3xl overflow-hidden border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-lg flex items-center justify-center p-1.5 mt-0.5">
+                          <img 
+                            src={exp.image_url || "/placeholder.jpg"} 
+                            alt={exp.company} 
+                            className="w-full h-full object-contain" 
+                          />
+                        </div>
                         <div className="flex flex-col flex-grow">
                           <span className={`inline-flex items-center text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-md border mb-1.5 shrink-0 w-fit ${idx % 2 === 0 ? "md:ml-auto" : ""} ${badgeColorClass}`}>
                             {exp.type}
@@ -281,11 +270,10 @@ export default function ExperienceSection() {
           Expand Journey ({filteredExperiences.length - INITIAL_DISPLAY_COUNT}) <ChevronDown size={15} />
         </>
       )}
-    </motion.button>      
+    </motion.button>       
   </div>
 )}      </div>
 
-      {/* MODAL POPUP DENGAN SLIDER DOKUMENTASI */}
       <AnimatePresence>
         {selectedExp && (() => {
           const modalBadgeColorClass = 
@@ -303,12 +291,9 @@ export default function ExperienceSection() {
   );
 }
 
-/* Sub-komponen Modal agar State Slider (activeSlide) terisolasi dengan aman per popup buka */
 function ModalContent({ selectedExp, setSelectedExp, modalBadgeColorClass }: { selectedExp: any; setSelectedExp: any; modalBadgeColorClass: string }) {
-  // Ambil data mentah dari berbagai kemungkinan nama kolom
   const rawGallery = selectedExp.documentation_images || selectedExp.gallery_urls;
 
-  // Normalisasi: pastikan bentuknya selalu array string yang valid
   let photos: string[] = [];
   if (Array.isArray(rawGallery)) {
     photos = rawGallery;
@@ -317,19 +302,15 @@ function ModalContent({ selectedExp, setSelectedExp, modalBadgeColorClass }: { s
       const parsed = JSON.parse(rawGallery);
       if (Array.isArray(parsed)) photos = parsed;
     } catch {
-      // Jika string biasa bukan JSON, masukkan sebagai elemen tunggal
       photos = [rawGallery];
     }
   }
 
-  // Jika tetap kosong, fallback ke image_url utama atau placeholder
   if (photos.length === 0) {
     photos = [selectedExp.image_url || "/placeholder.jpg"];
   }
 
   const [activeSlide, setActiveSlide] = useState(0);
-
-
 
   return (
     <motion.div 
@@ -355,7 +336,6 @@ function ModalContent({ selectedExp, setSelectedExp, modalBadgeColorClass }: { s
           <X size={16}/>
         </button>
         
-        {/* KOLOM KIRI: SLIDER DOKUMENTASI FOTO */}
         <div className="md:col-span-5 p-6 bg-slate-50 dark:bg-slate-900/50 border-b md:border-b-0 md:border-r border-slate-300 dark:border-slate-700 flex flex-col justify-between gap-6">
           <div className="space-y-4 w-full">
             <div className="space-y-2">
@@ -366,7 +346,6 @@ function ModalContent({ selectedExp, setSelectedExp, modalBadgeColorClass }: { s
                   className="w-full h-full object-cover transition-all duration-300" 
                 />
 
-                {/* Tombol Navigasi Slider */}
                 {photos.length > 1 && (
                   <>
                     <button 
@@ -388,7 +367,6 @@ function ModalContent({ selectedExp, setSelectedExp, modalBadgeColorClass }: { s
                 )}
               </div>
 
-              {/* Thumbnail Kecil */}
               {photos.length > 1 && (
                 <div className="flex gap-2 overflow-x-auto pb-1 pt-1">
                   {photos.map((photo: string, idx: number) => (
@@ -422,7 +400,6 @@ function ModalContent({ selectedExp, setSelectedExp, modalBadgeColorClass }: { s
           )}
         </div>
 
-        {/* KOLOM KANAN: DETAIL TEKS */}
         <div className="md:col-span-7 p-6 md:p-8 space-y-6 bg-white dark:bg-slate-900">
           <div className="space-y-2">
             <h3 className="text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">{selectedExp.company}</h3>

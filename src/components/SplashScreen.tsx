@@ -22,6 +22,7 @@ export default function SplashScreen({
   const scale = useMotionValue(1);
   const finished = useMotionValue(false);
 
+  // count up animation
   useEffect(() => {
     const controls = animate(count, 100, {
       duration: 1.35,
@@ -57,7 +58,7 @@ export default function SplashScreen({
         },
       }}
     >
-      {/* Background Grid */}
+      {/* background grid */}
       <div
         className="absolute inset-0 opacity-50 dark:opacity-20"
         style={{
@@ -66,7 +67,7 @@ export default function SplashScreen({
         }}
       />
 
-      {/* Glow */}
+      {/* glow */}
       <motion.div
         style={{ scale }}
         animate={{
@@ -86,7 +87,7 @@ export default function SplashScreen({
         transition={{ duration: 0.45 }}
         className="relative z-10 flex flex-col items-center"
       >
-        {/* Percentage */}
+        {/* percentage */}
         <motion.h1
           style={{ scale }}
           className="text-7xl md:text-8xl font-black tracking-[-0.06em] text-slate-950 dark:text-white tabular-nums"
@@ -94,7 +95,7 @@ export default function SplashScreen({
           <motion.span>{rounded}</motion.span>%
         </motion.h1>
 
-        {/* Progress Bar */}
+        {/* progress bar */}
         <motion.div
           style={{ scale }}
           className="relative mt-8 h-2 w-64 overflow-hidden rounded-full border border-slate-300 bg-white dark:border-slate-800 dark:bg-slate-900"
@@ -104,7 +105,7 @@ export default function SplashScreen({
             style={{ width }}
           />
 
-          {/* Shimmer */}
+          {/* shimmer */}
           <motion.div
             className="absolute top-0 h-full w-12 bg-white/40 dark:bg-white/20 blur-md"
             animate={{ x: [-60, 320] }}
@@ -116,7 +117,7 @@ export default function SplashScreen({
           />
         </motion.div>
 
-        {/* Identity */}
+        {/* identity */}
         <div className="mt-10 text-center">
           <motion.p
             initial={{ opacity: 0 }}

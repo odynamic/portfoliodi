@@ -204,7 +204,7 @@ export default function About({ projects = [] }: AboutProps) {
                   I believe data only reaches its full potential when it powers interactive, practical systems. As a data-driven web developer, I bridge engineering, design, and analytics to build web applications that go beyond aesthetics and actively guide strategic decisions.
                 </p>
                 <p>
-                  FFrom building intuitive interfaces and structuring database workflows to shipping data-backed dashboards, I ensure every digital product is rooted in solid logic and measurable results. By combining technical execution with user-centric design, I deliver reliable solutions that solve real business problems.
+                  From building intuitive interfaces and structuring database workflows to shipping data-backed dashboards, I ensure every digital product is rooted in solid logic and measurable results. By combining technical execution with user-centric design, I deliver reliable solutions that solve real business problems.
                 </p>
               </div>
             </motion.div>

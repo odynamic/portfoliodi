@@ -7,12 +7,21 @@ import { createClient } from "@/utils/supabase-client";
 
 function usePortfolioData<T = any>(tableName: string) {
   const [data, setData] = useState<T[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
     async function fetchData() {
-      const { data: fetchedData } = await supabase.from(tableName).select("*");
+      let query = supabase.from(tableName).select("*");
+
+      if (tableName === "projects") {
+        // Mengurutkan dari yang waktunya paling lama ke yang paling baru (yang baru diedit akan ada di paling akhir/kanan)
+        query = query.order("updated_at", { ascending: true, nullsFirst: true });
+      } else {
+        query = query.order("created_at", { ascending: true, nullsFirst: true });
+      }
+
+      const { data: fetchedData, error } = await query;
       setData(fetchedData || []);
       setLoading(false);
     }
@@ -184,7 +193,7 @@ export default function ProjectSection() {
               className="relative flex flex-col items-center -mt-2 w-full"
             >
               {/* Carousel Container */}
-              <div className="flex items-center justify-center h-[380px] sm:h-[420px] w-full max-w-6xl relative overflow-visible px-16 sm:px-20 perspective-[1200px] py-0">               
+              <div className="flex items-center justify-center h-[380px] sm:h-[420px] w-full max-w-6xl relative overflow-visible px-16 sm:px-20 perspective-[1200px] py-0">              
                 {projects.map((project, index) => {
                   const total = projects.length;
                   let diff = (index - currentIndex + total) % total;
@@ -469,7 +478,7 @@ export default function ProjectSection() {
               <div className="md:col-span-7 p-6 md:p-8 space-y-6 bg-white dark:bg-slate-900">
                 <div className="space-y-2">
                   <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Overview</h4>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">{selectedProviderOverview(selectedProject.overview)}</p>
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">{selectedProject.overview}</p>
                 </div>
 
                 {Array.isArray(selectedProject.features) && selectedProject.features.length > 0 && (
@@ -505,8 +514,4 @@ export default function ProjectSection() {
       </AnimatePresence>
     </section>
   );
-}
-
-function selectedProviderOverview(text: string) {
-  return text;
 }

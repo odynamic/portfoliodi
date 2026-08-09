@@ -15,7 +15,6 @@ function usePortfolioData<T = any>(tableName: string) {
       let query = supabase.from(tableName).select("*");
 
       if (tableName === "projects") {
-        // Mengurutkan dari yang waktunya paling lama ke yang paling baru (yang baru diedit akan ada di paling akhir/kanan)
         query = query.order("updated_at", { ascending: true, nullsFirst: true });
       } else {
         query = query.order("created_at", { ascending: true, nullsFirst: true });
@@ -64,15 +63,42 @@ export default function ProjectSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedProject, setSelectedProject] = useState<any | null>(null);
 
+  // null = Tampilan Carousel (Default)
+  // "all" | "web" | "data" = Tampilan Grid kategori
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
   const { data: projects, loading: loadProjects } = usePortfolioData("projects");
   const { data: techData, loading: loadTech } = usePortfolioData("technologies");
 
+  const filteredProjects = useMemo(() => {
+    if (!projects) return [];
+    if (!activeCategory || activeCategory === "all") return projects;
+    
+    return projects.filter((p) => {
+      if (p.category) {
+        return p.category.toLowerCase() === activeCategory;
+      }
+      const r = (p.role || "").toLowerCase();
+      const t = (p.tech_stack || []).join(" ").toLowerCase();
+      if (activeCategory === "web") {
+        return r.includes("full") || r.includes("front") || r.includes("back") || r.includes("ui") || t.includes("react") || t.includes("next");
+      } else if (activeCategory === "data") {
+        return r.includes("data") || r.includes("machine learning") || r.includes("expert") || r.includes("analytic") || t.includes("python") || t.includes("pandas");
+      }
+      return true;
+    });
+  }, [projects, activeCategory]);
+
   const nextProject = () => {
-    if (projects.length > 0) setCurrentIndex((p) => (p + 1) % projects.length);
+    if (projects.length > 0) {
+      setCurrentIndex((p) => (p + 1) % projects.length);
+    }
   };
 
   const prevProject = () => {
-    if (projects.length > 0) setCurrentIndex((p) => (p - 1 + projects.length) % projects.length);
+    if (projects.length > 0) {
+      setCurrentIndex((p) => (p - 1 + projects.length) % projects.length);
+    }
   };
 
   const handleDragEnd = (_: any, info: any) => {
@@ -123,7 +149,7 @@ export default function ProjectSection() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="mx-auto max-w-6xl px-6 sm:px-8 relative z-10"
       >
-        {/* Header & Tabs */}
+        {/* Header & Tab Utama (Projects vs Technologies) */}
         <div className="flex flex-col items-center mt-2 mb-2 text-center">
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
@@ -150,7 +176,7 @@ export default function ProjectSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-            className="inline-flex items-center p-1 bg-slate-200/80 dark:bg-slate-900/90 backdrop-blur-md rounded-full border border-slate-300 dark:border-slate-800 shadow-inner mt-5"
+            className="inline-flex items-center p-1 bg-slate-200/80 dark:bg-slate-900/95 backdrop-blur-md rounded-full border border-slate-300 dark:border-slate-800 shadow-inner mt-4"
           >
             {[
               { id: "projects", label: "Projects" },
@@ -160,8 +186,13 @@ export default function ProjectSection() {
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`relative px-5 py-1.5 text-xs font-black uppercase tracking-wider transition-colors duration-200 z-10 ${
+                  onClick={() => {
+                    setActiveTab(tab.id);
+                    if (tab.id === "projects") {
+                      setActiveCategory(null); // Kembali ke mode carousel otomatis saat tab Projects diklik
+                    }
+                  }}
+                  className={`relative px-5 py-1.5 text-xs font-black uppercase tracking-wider transition-colors duration-200 z-10 cursor-pointer ${
                     isActive
                       ? "text-white dark:text-slate-950"
                       : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
@@ -179,180 +210,288 @@ export default function ProjectSection() {
               );
             })}
           </motion.div>
+
+          {/* SUB-KATEGORI GRID */}
+          {activeTab === "projects" && (
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="relative z-20 inline-flex items-center p-1 bg-slate-200/80 dark:bg-slate-900 rounded-xl border border-slate-300 dark:border-slate-800 shadow-sm mt-3 pointer-events-auto"
+            >
+              {[
+                { id: "all", label: "All Projects" },
+                { id: "web", label: "Web Development" },
+                { id: "data", label: "Data & ML" },
+              ].map((cat) => {
+                const isActive = activeCategory === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => setActiveCategory(cat.id)}
+                    className={`relative px-3.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider rounded-lg transition-all cursor-pointer pointer-events-auto ${
+                      isActive
+                        ? "bg-slate-950 text-white dark:bg-white dark:text-slate-950 shadow-xs"
+                        : "text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white"
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                );
+              })}
+            </motion.div>
+          )}
         </div>
 
         {/* Content Switcher */}
         <AnimatePresence mode="wait">
           {activeTab === "projects" ? (
-            <motion.div 
-              key="carousel-5" 
-              initial={{ opacity: 0, y: 20 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              exit={{ opacity: 0, y: -20 }} 
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="relative flex flex-col items-center -mt-2 w-full"
-            >
-              {/* Carousel Container */}
-              <div className="flex items-center justify-center h-[380px] sm:h-[420px] w-full max-w-6xl relative overflow-visible px-16 sm:px-20 perspective-[1200px] py-0">              
-                {projects.map((project, index) => {
-                  const total = projects.length;
-                  let diff = (index - currentIndex + total) % total;
-                  if (diff > total / 2) diff -= total;
+            activeCategory === null ? (
+              /* CAROUSEL VIEW (Tampilan Default saat activeCategory === null) */
+              <motion.div 
+                key="carousel-view" 
+                initial={{ opacity: 0, y: 20 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                exit={{ opacity: 0, y: -20 }} 
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="relative flex flex-col items-center -mt-8 w-full"
+              >
+                <div className="flex items-center justify-center h-[380px] sm:h-[420px] w-full max-w-6xl relative overflow-visible px-16 sm:px-20 perspective-[1200px] py-0">         
+                  {projects.length === 0 ? (
+                    <div className="text-xs font-mono text-slate-500 uppercase tracking-widest py-10">
+                      No projects found.
+                    </div>
+                  ) : (
+                    projects.map((project, index) => {
+                      const total = projects.length;
+                      let diff = (index - currentIndex + total) % total;
+                      if (diff > total / 2) diff -= total;
 
-                  const isCenter = diff === 0;
-                  const isNearLeft = diff === -1;
-                  const isNearRight = diff === 1;
-                  const isFarLeft = diff === -2;
-                  const isFarRight = diff === 2;
+                      const isCenter = diff === 0;
+                      const isNearLeft = diff === -1;
+                      const isNearRight = diff === 1;
+                      const isFarLeft = diff === -2;
+                      const isFarRight = diff === 2;
 
-                  if (!isCenter && !isNearLeft && !isNearRight && !isFarLeft && !isFarRight) return null;
+                      if (!isCenter && !isNearLeft && !isNearRight && !isFarLeft && !isFarRight) return null;
 
-                  const badge = getRoleBadgeStyle(project.role);
+                      const badge = getRoleBadgeStyle(project.role);
 
-                  let scaleVal = 1;
-                  let opacityVal = 1;
-                  let xVal = "0%";
-                  let rotateYVal = 0;
-                  let zIndexVal = 30;
+                      let scaleVal = 1;
+                      let opacityVal = 1;
+                      let xVal = "0%";
+                      let rotateYVal = 0;
+                      let zIndexVal = 30;
 
-                  if (isCenter) {
-                    scaleVal = 1;
-                    opacityVal = 1;
-                    xVal = "0%";
-                    rotateYVal = 0;
-                    zIndexVal = 30;
-                  } else if (isNearLeft) {
-                    scaleVal = 0.85;
-                    opacityVal = 0.65;
-                    xVal = "-72%";
-                    rotateYVal = 6;
-                    zIndexVal = 20;
-                  } else if (isNearRight) {
-                    scaleVal = 0.85;
-                    opacityVal = 0.65;
-                    xVal = "72%";
-                    rotateYVal = -6;
-                    zIndexVal = 20;
-                  } else if (isFarLeft) {
-                    scaleVal = 0.72;
-                    opacityVal = 0.3;
-                    xVal = "-135%";
-                    rotateYVal = 12;
-                    zIndexVal = 10;
-                  } else if (isFarRight) {
-                    scaleVal = 0.72;
-                    opacityVal = 0.3;
-                    xVal = "135%";
-                    rotateYVal = -12;
-                    zIndexVal = 10;
-                  }
+                      if (isCenter) {
+                        scaleVal = 1;
+                        opacityVal = 1;
+                        xVal = "0%";
+                        rotateYVal = 0;
+                        zIndexVal = 30;
+                      } else if (isNearLeft) {
+                        scaleVal = 0.85;
+                        opacityVal = 0.65;
+                        xVal = "-72%";
+                        rotateYVal = 6;
+                        zIndexVal = 20;
+                      } else if (isNearRight) {
+                        scaleVal = 0.85;
+                        opacityVal = 0.65;
+                        xVal = "72%";
+                        rotateYVal = -6;
+                        zIndexVal = 20;
+                      } else if (isFarLeft) {
+                        scaleVal = 0.72;
+                        opacityVal = 0.3;
+                        xVal = "-135%";
+                        rotateYVal = 12;
+                        zIndexVal = 10;
+                      } else if (isFarRight) {
+                        scaleVal = 0.72;
+                        opacityVal = 0.3;
+                        xVal = "135%";
+                        rotateYVal = -12;
+                        zIndexVal = 10;
+                      }
 
-                  return (
-                    <motion.div
-                      key={project.id}
-                      layout
-                      style={{ position: isCenter ? "relative" : "absolute", zIndex: zIndexVal }}
-                      drag={isCenter ? "x" : false}
-                      dragConstraints={{ left: 0, right: 0 }}
-                      onDragEnd={handleDragEnd}
-                      animate={{
-                        scale: scaleVal,
-                        opacity: opacityVal,
-                        x: xVal,
-                        rotateY: rotateYVal,
-                        zIndex: zIndexVal,
-                      }}
-                      whileHover={isCenter ? { 
-                        scale: 1.03, 
-                        y: -8,
-                        transition: { type: "spring", stiffness: 400, damping: 15 }
-                      } : {}}
-                      transition={{ type: "spring", stiffness: 280, damping: 28 }}
-                      className={`w-[260px] sm:w-[310px] rounded-2xl overflow-hidden border-2 bg-white dark:bg-slate-900 flex flex-col transition-shadow duration-300 ${
-                        isCenter
-                          ? "cursor-grab active:cursor-grabbing border-slate-400 dark:border-slate-600 shadow-xl"
-                          : "pointer-events-none border-slate-300/50 dark:border-slate-800/50 shadow-none"
-                      }`}
-                    >
-                      {/* Project Image */}
-                      <div className="w-full h-[180px] sm:h-[200px] overflow-hidden relative bg-slate-200 dark:bg-slate-800 border-b-2 border-slate-400 dark:border-slate-600 flex items-center justify-center shrink-0 select-none pointer-events-none">
-                        {project.image_url ? (
-                          <motion.img 
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                            src={project.image_url} 
-                            alt={project.title} 
-                            className="w-full h-full object-cover object-center" 
-                          />
-                        ) : (
-                          <span className="text-slate-400 font-mono text-[10px] font-bold uppercase tracking-wider">[ No Visual ]</span>
-                        )}
-                      </div>
-
-                      {/* Card Content */}
-                      <div className="p-3.5 flex flex-col gap-2.5 bg-white dark:bg-slate-900">
-                        <div className="space-y-1">
-                          {project.role && (
-                            <div className="flex items-center gap-1.5">
-                              <span className={`h-1.5 w-1.5 rounded-full ${badge.dot}`} />
-                              <span className={`text-[10px] font-black uppercase tracking-wider ${badge.text}`}>
-                                {project.role}
-                              </span>
-                            </div>
-                          )}
-                          <h3 className="text-base font-black text-slate-950 dark:text-white tracking-tight leading-snug line-clamp-1">
-                            {project.title}
-                          </h3>
-                        </div>
-
-                        <motion.button
-                          whileTap={{ scale: 0.95 }}
-                          whileHover={{ scale: 1.02 }}
-                          transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                          onClick={() => setSelectedProject(project)}
-                          className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl border-2 border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 text-xs font-black uppercase tracking-wider transition-colors duration-200 group shrink-0"
+                      return (
+                        <motion.div
+                          key={project.id}
+                          layout
+                          style={{ position: isCenter ? "relative" : "absolute", zIndex: zIndexVal }}
+                          drag={isCenter ? "x" : false}
+                          dragConstraints={{ left: 0, right: 0 }}
+                          onDragEnd={handleDragEnd}
+                          animate={{
+                            scale: scaleVal,
+                            opacity: opacityVal,
+                            x: xVal,
+                            rotateY: rotateYVal,
+                            zIndex: zIndexVal,
+                          }}
+                          whileHover={isCenter ? { 
+                            scale: 1.03, 
+                            y: -8,
+                            transition: { type: "spring", stiffness: 400, damping: 15 }
+                          } : {}}
+                          transition={{ type: "spring", stiffness: 280, damping: 28 }}
+                          className={`w-[260px] sm:w-[310px] rounded-2xl overflow-hidden border-2 bg-white dark:bg-slate-900 flex flex-col transition-shadow duration-300 ${
+                            isCenter
+                              ? "cursor-grab active:cursor-grabbing border-slate-400 dark:border-slate-600 shadow-xl"
+                              : "pointer-events-none border-slate-300/50 dark:border-slate-800/50 shadow-none"
+                          }`}
                         >
-                          Explore Details <ArrowUpRight size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                        </motion.button>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
+                          <div className="w-full h-[180px] sm:h-[200px] overflow-hidden relative bg-slate-200 dark:bg-slate-800 border-b-2 border-slate-400 dark:border-slate-600 flex items-center justify-center shrink-0 select-none pointer-events-none">
+                            {project.image_url ? (
+                              <motion.img 
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                                src={project.image_url} 
+                                alt={project.title} 
+                                className="w-full h-full object-cover object-center" 
+                              />
+                            ) : (
+                              <span className="text-slate-400 font-mono text-[10px] font-bold uppercase tracking-wider">[ No Visual ]</span>
+                            )}
+                          </div>
 
-              {/* Navigation & Indicators */}
-              <div className="flex items-center gap-2.5 -mt-8 relative z-50">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={prevProject}
-                  className="p-1.5 rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 shadow-xs hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 transition-all cursor-pointer"
-                >
-                  <ChevronLeft size={15} />
-                </motion.button>
+                          <div className="p-3.5 flex flex-col gap-2.5 bg-white dark:bg-slate-900">
+                            <div className="space-y-1">
+                              {project.role && (
+                                <div className="flex items-center gap-1.5">
+                                  <span className={`h-1.5 w-1.5 rounded-full ${badge.dot}`} />
+                                  <span className={`text-[10px] font-black uppercase tracking-wider ${badge.text}`}>
+                                    {project.role}
+                                  </span>
+                                </div>
+                              )}
+                              <h3 className="text-base font-black text-slate-950 dark:text-white tracking-tight leading-snug line-clamp-1">
+                                {project.title}
+                              </h3>
+                            </div>
 
-                <div className="flex gap-1.5 items-center px-3 py-1.5 bg-white dark:bg-slate-900 rounded-full border-2 border-slate-300 dark:border-slate-700 shadow-xs">
-                  {projects.map((_, i) => (
-                    <div
-                      key={i}
-                      onClick={() => setCurrentIndex(i)}
-                      className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                        i === currentIndex ? "w-5 bg-slate-950 dark:bg-white" : "w-1.5 bg-slate-300 dark:border-slate-700 hover:bg-slate-400"
-                      }`}
-                    />
-                  ))}
+                            <motion.button
+                              whileTap={{ scale: 0.95 }}
+                              whileHover={{ scale: 1.02 }}
+                              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                              onClick={() => setSelectedProject(project)}
+                              className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl border-2 border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 text-xs font-black uppercase tracking-wider transition-colors duration-200 group shrink-0"
+                            >
+                              Explore Details <ArrowUpRight size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                            </motion.button>
+                          </div>
+                        </motion.div>
+                      );
+                    })
+                  )}
                 </div>
 
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={nextProject}
-                  className="p-1.5 rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 shadow-xs hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 transition-all cursor-pointer"
-                >
-                  <ChevronRight size={15} />
-                </motion.button>
-              </div>
-            </motion.div>
+                {/* Navigasi Carousel */}
+                {projects.length > 0 && (
+                  <div className="flex items-center gap-2.5 -mt-6">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={prevProject}
+                      className="p-1.5 rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 shadow-xs hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 transition-all cursor-pointer"
+                    >
+                      <ChevronLeft size={15} />
+                    </motion.button>
+
+                    <div className="flex gap-1.5 items-center px-3 py-1.5 bg-white dark:bg-slate-900 rounded-full border-2 border-slate-300 dark:border-slate-700 shadow-xs max-w-[200px] overflow-x-auto">
+                      {projects.map((_, i) => (
+                        <div
+                          key={i}
+                          onClick={() => setCurrentIndex(i)}
+                          className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer shrink-0 ${
+                            i === currentIndex ? "w-5 bg-slate-950 dark:bg-white" : "w-1.5 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400"
+                          }`}
+                        />
+                      ))}
+                    </div>
+
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={nextProject}
+                      className="p-1.5 rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 shadow-xs hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 transition-all cursor-pointer"
+                    >
+                      <ChevronRight size={15} />
+                    </motion.button>
+                  </div>
+                )}
+              </motion.div>
+            ) : (
+              /* GRID VIEW (Tampil ketika All, Web, atau Data diklik) */
+              <motion.div
+                key="grid-view"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="w-full max-w-6xl mx-auto mt-6 flex flex-col items-center gap-6"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
+                  {filteredProjects.length === 0 ? (
+                    <div className="col-span-full text-center text-xs font-mono text-slate-500 uppercase tracking-widest py-12">
+                      No projects found in this category.
+                    </div>
+                  ) : (
+                    filteredProjects.map((project) => {
+                      const badge = getRoleBadgeStyle(project.role);
+                      return (
+                        <motion.div
+                          key={project.id}
+                          layout
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          whileHover={{ y: -6, transition: { type: "spring", stiffness: 400, damping: 15 } }}
+                          className="rounded-2xl overflow-hidden border-2 border-slate-400 dark:border-slate-600 bg-white dark:bg-slate-900 flex flex-col shadow-md"
+                        >
+                          <div className="w-full h-[180px] overflow-hidden relative bg-slate-200 dark:bg-slate-800 border-b-2 border-slate-400 dark:border-slate-600 flex items-center justify-center shrink-0">
+                            {project.image_url ? (
+                              <img 
+                                src={project.image_url} 
+                                alt={project.title} 
+                                className="w-full h-full object-cover object-center" 
+                              />
+                            ) : (
+                              <span className="text-slate-400 font-mono text-[10px] font-bold uppercase tracking-wider">[ No Visual ]</span>
+                            )}
+                          </div>
+
+                          <div className="p-3.5 flex flex-col gap-2.5 bg-white dark:bg-slate-900 justify-between flex-1">
+                            <div className="space-y-1">
+                              {project.role && (
+                                <div className="flex items-center gap-1.5">
+                                  <span className={`h-1.5 w-1.5 rounded-full ${badge.dot}`} />
+                                  <span className={`text-[10px] font-black uppercase tracking-wider ${badge.text}`}>
+                                    {project.role}
+                                  </span>
+                                </div>
+                              )}
+                              <h3 className="text-base font-black text-slate-950 dark:text-white tracking-tight leading-snug line-clamp-1">
+                                {project.title}
+                              </h3>
+                            </div>
+
+                            <motion.button
+                              whileTap={{ scale: 0.95 }}
+                              whileHover={{ scale: 1.02 }}
+                              onClick={() => setSelectedProject(project)}
+                              className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl border-2 border-slate-400 dark:border-slate-600 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 text-xs font-black uppercase tracking-wider transition-colors duration-200 group shrink-0 mt-2 cursor-pointer"
+                            >
+                              Explore Details <ArrowUpRight size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                            </motion.button>
+                          </div>
+                        </motion.div>
+                      );
+                    })
+                  )}
+                </div>
+              </motion.div>
+            )
           ) : ( 
             /* Technologies Grid */
             <motion.div 
@@ -415,7 +554,7 @@ export default function ProjectSection() {
             >
               <button
                 onClick={() => setSelectedProject(null)}
-                className="absolute top-4 right-4 p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 transition-all z-50 border border-slate-200 dark:border-slate-700"
+                className="absolute top-4 right-4 p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-950 hover:text-white dark:hover:bg-white dark:hover:text-slate-950 transition-all z-50 border border-slate-200 dark:border-slate-700 cursor-pointer"
               >
                 <X size={16} />
               </button>
